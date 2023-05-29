@@ -13,6 +13,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "MiniTwit.Tests", "MiniTwit.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Infrastructure.Tests", "MiniTwit.Tests\Infrastructure.Tests\Infrastructure.Tests.csproj", "{EDB578D2-8D27-4315-80CC-A56F03B1F41A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MiniTwit.Security", "MiniTwit.Security\MiniTwit.Security.csproj", "{732F46A3-B12A-4B0B-AAC7-C5764654EBCD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Security.Tests", "MiniTwit.Tests\Security.Tests\Security.Tests.csproj", "{CD7374B9-4749-45B3-BF6E-D515F63D39D4}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -38,8 +42,17 @@ Global
 		{EDB578D2-8D27-4315-80CC-A56F03B1F41A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EDB578D2-8D27-4315-80CC-A56F03B1F41A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EDB578D2-8D27-4315-80CC-A56F03B1F41A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{732F46A3-B12A-4B0B-AAC7-C5764654EBCD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{732F46A3-B12A-4B0B-AAC7-C5764654EBCD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{732F46A3-B12A-4B0B-AAC7-C5764654EBCD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{732F46A3-B12A-4B0B-AAC7-C5764654EBCD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CD7374B9-4749-45B3-BF6E-D515F63D39D4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CD7374B9-4749-45B3-BF6E-D515F63D39D4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CD7374B9-4749-45B3-BF6E-D515F63D39D4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CD7374B9-4749-45B3-BF6E-D515F63D39D4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{EDB578D2-8D27-4315-80CC-A56F03B1F41A} = {1E892E94-FCBA-4D27-A771-37CCEFE86ADF}
+		{CD7374B9-4749-45B3-BF6E-D515F63D39D4} = {1E892E94-FCBA-4D27-A771-37CCEFE86ADF}
 	EndGlobalSection
 EndGlobal
