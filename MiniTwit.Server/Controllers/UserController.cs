@@ -26,7 +26,7 @@ public class UserController : ControllerBase
     [HttpPost("/register")]
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status409Conflict)]
-    public async Task<ActionResult> Login([FromBody] UserCreateDTO userCreateDTO)
+    public async Task<ActionResult> Register([FromBody] UserCreateDTO userCreateDTO)
     {
         throw new NotImplementedException();
     }
