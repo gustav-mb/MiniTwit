@@ -3,6 +3,7 @@
 
 ### Local ###
 .local
+.vscode
 
 ### Csharp ###
 ## Ignore Visual Studio temporary files, build results, and
