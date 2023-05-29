@@ -42,7 +42,7 @@ public class TweetRepository : ITweetRepository
         return new DBResult();
     }
 
-    public async Task<DBResult<IEnumerable<Tweet>>> GetAllByUsernameAsync(string username, int limit = 30, CancellationToken ct = default)
+    public async Task<DBResult<IEnumerable<Tweet>>> GetAllByUsernameAsync(string username, int? limit = null, CancellationToken ct = default)
     {
         var user = await _context.Users.Find(user => user.Username == username).FirstOrDefaultAsync(ct);
 
@@ -65,7 +65,7 @@ public class TweetRepository : ITweetRepository
         };
     }
 
-    public async Task<DBResult<IEnumerable<Tweet>>> GetAllNonFlaggedAsync(int limit = 30, CancellationToken ct = default)
+    public async Task<DBResult<IEnumerable<Tweet>>> GetAllNonFlaggedAsync(int? limit = null, CancellationToken ct = default)
     {
         var tweets = await _context.Tweets.Find(tweet => !tweet.Flagged).SortByDescending(tweet => tweet.PubDate).Limit(limit).ToListAsync(ct);
 
@@ -76,7 +76,7 @@ public class TweetRepository : ITweetRepository
         };
     }
 
-    public async Task<DBResult<IEnumerable<Tweet>>> GetAllNonFlaggedFollowedByUserIdAsync(string userId, int limit = 30, CancellationToken ct = default)
+    public async Task<DBResult<IEnumerable<Tweet>>> GetAllNonFlaggedFollowedByUserIdAsync(string userId, int? limit = null, CancellationToken ct = default)
     {
         var user = await GetUserByUserIdAsync(userId, ct);
 
@@ -99,7 +99,7 @@ public class TweetRepository : ITweetRepository
             .Where(tuf => !tuf.tweet.Flagged && tuf.user.Id == userId || tuf.follower.WhoId == userId)
             .Select(tuf => tuf.tweet)
             .OrderByDescending(tweet => tweet.PubDate)
-            .Take(limit)
+            .Take(limit ?? int.MaxValue)
             .ToList();
 
         return new DBResult<IEnumerable<Tweet>>
