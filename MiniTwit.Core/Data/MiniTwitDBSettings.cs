@@ -1,6 +1,6 @@
 namespace MiniTwit.Core.Data;
 
-public class MiniTwitDBSettings
+public class MiniTwitDatabaseSettings
 {
     public string ConnectionString { get; set; } = null!;
     public string DatabaseName { get; set; } = null!;
