@@ -12,7 +12,7 @@ public record DBResult<T> : DBResult
 {
     public T? Model { get; init; }
 
-    public TTarget ConvertModelTO<TTarget>()
+    public TTarget ConvertModelTo<TTarget>()
     {
         if (Model == null)
         {
