@@ -1,7 +1,7 @@
 using MiniTwit.Core.Entities;
 using MongoDB.Driver;
 
-namespace MiniTwit.Core;
+namespace MiniTwit.Core.Data;
 
 public interface IMiniTwitContext
 {

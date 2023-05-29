@@ -1,4 +1,4 @@
-namespace MiniTwit.Core;
+namespace MiniTwit.Core.Data;
 
 public class MiniTwitDBSettings
 {
