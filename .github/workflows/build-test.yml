@@ -5,7 +5,7 @@ on:
       - "**"
 
 jobs:
-  backend:
+  Backend:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout repository
