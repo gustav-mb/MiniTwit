@@ -6,7 +6,6 @@ namespace MiniTwit.Core.Entities;
 public class Tweet
 {
     [BsonId]
-    [BsonElement("id")]
     [BsonRepresentation(BsonType.ObjectId)]
     public string Id { get; set; } = null!;
     [BsonRepresentation(BsonType.ObjectId)]
