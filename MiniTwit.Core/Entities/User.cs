@@ -8,9 +8,9 @@ public class User
     [BsonId]
     [BsonElement("id")]
     [BsonRepresentation(BsonType.ObjectId)]
-    string Id { get; set; } = null!;
-    string Username { get; set; } = null!;
-    string Email { get; set; } = null!;
-    string Password { get; set; } = null!;
-    string Salt { get; set; } = null!;
+    public string Id { get; set; } = null!;
+    public string Username { get; set; } = null!;
+    public string Email { get; set; } = null!;
+    public string Password { get; set; } = null!;
+    public string Salt { get; set; } = null!;
 }

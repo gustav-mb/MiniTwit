@@ -8,10 +8,10 @@ public class Tweet
     [BsonId]
     [BsonElement("id")]
     [BsonRepresentation(BsonType.ObjectId)]
-    string Id { get; set; } = null!;
+    public string Id { get; set; } = null!;
     [BsonRepresentation(BsonType.ObjectId)]
-    string AuthorId { get; set; } = null!;
-    string Text { get; set; } = null!;
-    DateTime PubDate { get; set; }
-    bool Flagged { get; set; }
+    public string AuthorId { get; set; } = null!;
+    public string Text { get; set; } = null!;
+    public DateTime PubDate { get; set; }
+    public bool Flagged { get; set; }
 }
