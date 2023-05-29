@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using MiniTwit.Core.DTOs;
+using MiniTwit.Service;
 
 namespace MiniTwit.Server.Controllers;
 
@@ -8,10 +9,12 @@ namespace MiniTwit.Server.Controllers;
 [Route("[controller]")]
 public class UserController : ControllerBase
 {
+    private readonly IServiceManager _serviceManager;
     private readonly ILogger<UserController> _logger;
 
-    public UserController(ILogger<UserController> logger)
+    public UserController(IServiceManager serviceManager, ILogger<UserController> logger)
     {
+        _serviceManager = serviceManager;
         _logger = logger;
     }
 
@@ -20,7 +23,8 @@ public class UserController : ControllerBase
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     public async Task<ActionResult<UserDTO>> Login([FromBody] LoginDTO loginDTO)
     {
-        throw new NotImplementedException();
+        var response = await _serviceManager.UserService.AuthenticateAsync(loginDTO);
+        return response.ToActionResult();
     }
 
     [HttpPost("/register")]
@@ -28,13 +32,14 @@ public class UserController : ControllerBase
     [ProducesResponseType(StatusCodes.Status409Conflict)]
     public async Task<ActionResult> Register([FromBody] UserCreateDTO userCreateDTO)
     {
-        throw new NotImplementedException();
+        var response = await _serviceManager.UserService.RegisterUserAsync(userCreateDTO);
+        return response.ToActionResult();
     }
 
     [HttpPost("/logout")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     public async Task<ActionResult> Logout()
     {
-        throw new NotImplementedException();
+        return await Task.FromResult(Ok());
     }
 }

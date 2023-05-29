@@ -1,5 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
-using MiniTwit.Core.DTOs;
+using MiniTwit.Service;
 
 namespace MiniTwit.Server.Controllers;
 
@@ -8,10 +8,12 @@ namespace MiniTwit.Server.Controllers;
 [Route("[controller]")]
 public class FollowerController : ControllerBase
 {
+    private readonly IServiceManager _serviceManager;
     private readonly ILogger<FollowerController> _logger;
 
-    public FollowerController(ILogger<FollowerController> logger)
+    public FollowerController(IServiceManager serviceManager, ILogger<FollowerController> logger)
     {
+        _serviceManager = serviceManager;
         _logger = logger;
     }
 
@@ -21,7 +23,8 @@ public class FollowerController : ControllerBase
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<ActionResult> FollowUser(string username, [FromQuery] string userId)
     {
-        throw new NotImplementedException();
+        var response = await _serviceManager.FollowerService.FollowUserAsync(userId, username);
+        return response.ToActionResult();
     }
 
     [HttpDelete("/{username}/unfollow")]
@@ -30,6 +33,7 @@ public class FollowerController : ControllerBase
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<ActionResult> UnfollowUser(string username, [FromQuery] string userId)
     {
-        throw new NotImplementedException();
+        var response = await _serviceManager.FollowerService.UnfollowUserAsync(userId, username);
+        return response.ToActionResult();
     }
 }

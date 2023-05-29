@@ -13,6 +13,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\MiniTwit.Core\MiniTwit.Core.csproj" />
+    <ProjectReference Include="..\MiniTwit.Service\MiniTwit.Service.csproj" />
   </ItemGroup>
 
 </Project>
