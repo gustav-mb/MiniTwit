@@ -2,6 +2,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\MiniTwit.Core\MiniTwit.Core.csproj" />
+    <ProjectReference Include="..\MiniTwit.Security\MiniTwit.Security.csproj" />
   </ItemGroup>
 
   <PropertyGroup>
