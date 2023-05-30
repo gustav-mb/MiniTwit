@@ -60,7 +60,7 @@ jobs:
         run: Snyk iac test --report --org=${{ secrets.SNYK_ORG_ID }} || true
       
       - name: Build Backend Docker image
-        run: docker build -t backend-test MiniTwit.Server/Dockerfile
+        run: docker build -t backend-test MiniTwit.Server
 
       # - name: Build Frontend Docker image
       #   run: docker build -t frontend-test MiniTwit.Web/Dockerfile
