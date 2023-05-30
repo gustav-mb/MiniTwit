@@ -4,14 +4,14 @@ on:
     branches: [main]
   pull_request:
     branches: [main]
+permissions:
+  security-events: write # for github/codeql-action/upload-sarif to upload SARIF results
+  actions: read          # only required for a private repository by github/codeql-action/upload-sarif to get the Action run status
+  contents: read         # for actions/checkout to fetch code
 
 jobs:
   CodeQL:
     runs-on: ubuntu-latest
-    permissions:
-      security-events: write
-      actions: read
-      contents: read
     steps:
       - name: Checkout repository
         uses: actions/Checkout@v3
@@ -24,15 +24,11 @@ jobs:
       - name: Autobuild
         uses: github/codeql-action/autobuild@v2
 
-      - name: perform CodeQL Analysis
+      - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@v2
 
   Snyk:
     runs-on: ubuntu-latest
-    permissions:
-      security-events: write # for github/codeql-action/upload-sarif to upload SARIF results
-      actions: read          # only required for a private repository by github/codeql-action/upload-sarif to get the Action run status
-      contents: read         # for actions/checkout to fetch code
     env:
       SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
     steps:
@@ -59,14 +55,14 @@ jobs:
       - name: Run Snyk IaC tests and report
         run: snyk iac test --report --org=${{ secrets.SNYK_ORG_ID }} || true
       
-      - name: Build Backend Docker image
-        run: docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/MiniTwit-Backend:latest -f MiniTwit.Server/Dockerfile .
+      - name: Build MiniTwit Backend Docker image
+        run: docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/miniTwit-backend:latest -f MiniTwit.Server/Dockerfile .
 
-      # - name: Build Frontend Docker image
-      #   run: docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/MiniTwit-Frontend:latest -f MiniTwit.Web/Dockerfile .
+      # - name: Build MiniTwit Frontend Docker image
+      #   run: docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/miniTwit-frontend:latest -f MiniTwit.Web/Dockerfile .
       
       - name: Run Snyk Container Monitor on MiniTwit Backend
-        run: snyk container monitor --org=${{ secrets.SNYK_ORG_ID }} MiniTwit-Backend:latest --file=MiniTwit.Server/Dockerfile
+        run: snyk container monitor --org=${{ secrets.SNYK_ORG_ID }} miniTwit-backend:latest --file=MiniTwit.Server/Dockerfile
 
       # - name: Run Snyk Container Monitor on MiniTwit Frontend
       #   run: snyk container monitor --org=${{ secrets.SNYK_ORG_ID }} MiniTwit-Frontend:latest --file=MiniTwit.Web/Dockerfile
