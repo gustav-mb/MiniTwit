@@ -1,8 +1,6 @@
 name: Build & Test
 on:
   push:
-    branches:
-      - "**"
 
 jobs:
   Backend:
@@ -24,3 +22,28 @@ jobs:
 
     - name: Test
       run: dotnet test --no-build --verbosity normal
+
+  # Frontend:
+  #   runs-on: unbuntu-latest
+  #   defaults:
+  #     run:
+  #       working-directory: MiniTwit.Web
+  #   steps:
+  #     - name: Checkout repository
+  #       uses: actions/checkout@v3
+
+  #     - name: Setup Node.js
+  #       uses: actions/setup-node@v3
+  #       with:
+  #         node-version: 18.16.x
+  #         cache: 'npm'
+  #         cache-dependency-path: MiniTwit.Web/package-lock.json
+      
+  #     - name: Install dependencies
+  #       run: npm ci
+
+  #     - name: Build
+  #       run: npm run build --if-present
+
+  #     - name: Test
+  #       run: echo Not implemented
