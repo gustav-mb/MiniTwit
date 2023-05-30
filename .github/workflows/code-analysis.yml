@@ -56,16 +56,16 @@ jobs:
         run: snyk iac test --report --org=${{ secrets.SNYK_ORG_ID }} || true
       
       - name: Build MiniTwit Backend Docker image
-        run: docker build -t miniTwit-backend:latest -f MiniTwit.Server/Dockerfile .
+        run: docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/minitwit-backend:latest -f MiniTwit.Server/Dockerfile .
 
       # - name: Build MiniTwit Frontend Docker image
-      #   run: docker build -t miniTwit-frontend:latest -f MiniTwit.Web/Dockerfile .
+      #   run: docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/minitwit-frontend:latest -f MiniTwit.Web/Dockerfile .
       
       - name: Run Snyk Container Monitor on MiniTwit Backend
-        run: snyk container monitor --org=${{ secrets.SNYK_ORG_ID }} miniTwit-backend:latest --file=MiniTwit.Server/Dockerfile
+        run: snyk container monitor --org=${{ secrets.SNYK_ORG_ID }} minitwit-backend:latest --file=MiniTwit.Server/Dockerfile
 
       # - name: Run Snyk Container Monitor on MiniTwit Frontend
-      #   run: snyk container monitor --org=${{ secrets.SNYK_ORG_ID }} MiniTwit-Frontend:latest --file=MiniTwit.Web/Dockerfile
+      #   run: snyk container monitor --org=${{ secrets.SNYK_ORG_ID }} minitwit-frontend:latest --file=MiniTwit.Web/Dockerfile
 
       - name: Upload result to GitHub Code Scanning
         uses: github/codeql-action/upload-sarif@v2
