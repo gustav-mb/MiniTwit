@@ -56,10 +56,10 @@ jobs:
         run: snyk iac test --report --org=${{ secrets.SNYK_ORG_ID }} || true
       
       - name: Build MiniTwit Backend Docker image
-        run: docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/miniTwit-backend:latest -f MiniTwit.Server/Dockerfile .
+        run: docker build -t miniTwit-backend:latest -f MiniTwit.Server/Dockerfile .
 
       # - name: Build MiniTwit Frontend Docker image
-      #   run: docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/miniTwit-frontend:latest -f MiniTwit.Web/Dockerfile .
+      #   run: docker build -t miniTwit-frontend:latest -f MiniTwit.Web/Dockerfile .
       
       - name: Run Snyk Container Monitor on MiniTwit Backend
         run: snyk container monitor --org=${{ secrets.SNYK_ORG_ID }} miniTwit-backend:latest --file=MiniTwit.Server/Dockerfile
