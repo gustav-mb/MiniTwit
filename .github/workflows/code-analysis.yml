@@ -30,35 +30,48 @@ jobs:
   Snyk:
     runs-on: ubuntu-latest
     permissions:
-      contents: read # for actions/checkout to fetch code
+      contents: read         # for actions/checkout to fetch code
       security-events: write # for github/codeql-action/upload-sarif to upload SARIF results
-      actions: read # only required for a private repository by github/codeql-action/upload-sarif to get the Action run status
+      actions: read          # only required for a private repository by github/codeql-action/upload-sarif to get the Action run status
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Run Snyk on Backend
-        uses: snyk/actions/dotnet@master
-        continue-on-error: true
+      - name: Setup Snyk CLI
+        uses: snyk/actions/setup@master
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v3
         with:
-          args: --all-projects --sarif-file-output=snyk-backend.sarif
-          
-      - name: Upload Backend results to GitHub Code Scanning
+          dotnet-version: 7.0.x
+
+      - name: Build Backend
+        run: dotnet build
+
+      - name: Run Snyk Static Code Analysis on Backend
+        run: snyk code --report --sarif --org=${{ secrets.SNYK_ORG_ID }} > snyk-code.sarif || true
+
+      - name: Run Snyk Open Source Monitor
+        run: snyk monitor --all-projects --org=${{ secrets.SNYK_ORG_ID }}
+      
+      - name: Run Snyk IaC tests and report
+        run: Snyk iac test --report --org=${{ secrets.SNYK_ORG_ID }} || true
+      
+      - name: Build Backend Docker image
+        run: docker build -t backend-test MiniTwit.Server/Dockerfile
+
+      # - name: Build Frontend Docker image
+      #   run: docker build -t frontend-test MiniTwit.Web/Dockerfile
+      
+      - name: Run Snyk Container Monitor on MiniTwit Backend
+        run: snyk container monitor --org=${{ secrets.SNYK_ORG_ID }} backend-test --file=MiniTwit.Server/Dockerfile
+
+      # - name: Run Snyk Container Monitor on MiniTwit Frontend
+      #   run: snyk container monitor --org=${{ secrets.SNYK_ORG_ID }} frontend-test --file=MiniTwit.Web/Dockerfile
+
+      - name: Upload result to GitHub Code Scanning
         uses: github/codeql-action/upload-sarif@v2
         with:
-          sarif_file: snyk-backend.sarif
-
-      # - name: Run Snyk on Frontend
-      #   uses: snyk/actions/node@master
-      #   continue-on-error: true
-      #   env:
-      #     SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
-      #   with:
-      #     args: --sarif-file-output=snyk-frontend.sarif
-
-      # - name: Upload Backend results to GitHub Code Scanning
-      #   uses: github/codeql-action/upload-sarif@v2
-      #   with:
-      #     sarif_file: snyk-frontend.sarif
+          sarif_file: snyk-code.sarif
