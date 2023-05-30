@@ -50,8 +50,8 @@ jobs:
       - name: Build Backend
         run: dotnet build
 
-      - name: Run Snyk Static Code Analysis on Backend
-        run: snyk code --report --sarif --org=${{ secrets.SNYK_ORG_ID }} > snyk-code.sarif || true
+      - name: Run Snyk Static Code Analysis
+        run: snyk code test --report --sarif --org=${{ secrets.SNYK_ORG_ID }} > snyk-code.sarif || true
 
       - name: Run Snyk Open Source Monitor
         run: snyk monitor --all-projects --org=${{ secrets.SNYK_ORG_ID }}
