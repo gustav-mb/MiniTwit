@@ -1,12 +1,12 @@
 using Moq;
 using MiniTwit.Core.IRepositories;
 using MiniTwit.Core.Responses;
-using static MiniTwit.Core.Error.DBError;
-using static MiniTwit.Core.Responses.HTTPResponse;
 using MiniTwit.Security.Hashing;
 using MiniTwit.Service.Services;
 using MiniTwit.Core.Entities;
 using MiniTwit.Core.DTOs;
+using static MiniTwit.Core.Error.DBError;
+using static MiniTwit.Core.Responses.HTTPResponse;
 
 namespace MiniTwit.Tests.Service.Tests.Services;
 
