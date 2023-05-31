@@ -47,7 +47,7 @@ jobs:
         run: dotnet restore
 
       - name: Run Snyk Static Code Analysis
-        run: snyk code test --report --org=${{ secrets.SNYK_ORG_ID }} --sarif > snyk-code.sarif || true
+        run: snyk code test --report --org=${{ secrets.SNYK_ORG_ID }} --sarif-file-output=snyk-code.sarif
 
       - name: Run Snyk Open Source Monitor
         run: snyk monitor --all-projects --org=${{ secrets.SNYK_ORG_ID }}
