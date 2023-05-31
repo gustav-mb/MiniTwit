@@ -18,7 +18,7 @@ public class TweetController : ControllerBase
         _logger = logger;
     }
 
-    [HttpGet("/")]
+    [HttpGet]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<ActionResult<IEnumerable<TweetDTO>>> Timeline([FromQuery] string userId, CancellationToken ct = default)
@@ -27,7 +27,7 @@ public class TweetController : ControllerBase
         return response.ToActionResult();
     }
 
-    [HttpGet("/public")]
+    [HttpGet("public")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     public async Task<ActionResult<IEnumerable<TweetDTO>>> PublicTimeline(CancellationToken ct = default)
     {
@@ -35,7 +35,7 @@ public class TweetController : ControllerBase
         return response.ToActionResult();
     }
 
-    [HttpGet("/{username}")]
+    [HttpGet("{username}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<ActionResult<IEnumerable<TweetDTO>>> UserTimeline(string username, CancellationToken ct = default)
@@ -44,7 +44,7 @@ public class TweetController : ControllerBase
         return response.ToActionResult();
     }
 
-    [HttpPost("/add_message")]
+    [HttpPost("add_message")]
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<ActionResult> AddMessage([FromBody] TweetCreateDTO tweetCreateDTO)
