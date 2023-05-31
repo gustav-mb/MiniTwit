@@ -30,7 +30,7 @@ public class UserService : IUserService
 
         if (string.IsNullOrEmpty(loginDTO.Password))
         {
-            return new APIResponse<UserDTO>(Unauthorized, null, INVALID_PASSWORD);
+            return new APIResponse<UserDTO>(Unauthorized, null, PASSWORD_MISSING);
         }
 
         var validPassword = await _hasher.VerifyHashAsync(loginDTO.Password, dbResult.Model!.Password, dbResult.Model.Salt);
