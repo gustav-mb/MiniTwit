@@ -7,6 +7,7 @@ using MiniTwit.Infrastructure;
 using MiniTwit.Core.MongoDB.DependencyInjection;
 using MiniTwit.Core.Entities;
 using MiniTwit.Core;
+using MiniTwit.Security.Hashing;
 
 namespace MiniTwit.Tests.Integration.Tests;
 
@@ -45,8 +46,9 @@ public class CustomWebApplicationFactory : WebApplicationFactory<Program>
             var provider = services.BuildServiceProvider();
             using var scope = provider.CreateScope();
             var appContext = scope.ServiceProvider.GetRequiredService<MiniTwitContext>();
+            var hasher  = scope.ServiceProvider.GetRequiredService<IHasher>();
             
-            Seed(appContext);
+            Seed(appContext, hasher);
         });
 
         builder.UseEnvironment("Integration");
@@ -54,16 +56,18 @@ public class CustomWebApplicationFactory : WebApplicationFactory<Program>
         return base.CreateHost(builder);
     }
 
-    private void Seed(IMiniTwitContext context)
+    private void Seed(IMiniTwitContext context, IHasher hasher)
     {
+        var hashResult = hasher.Hash("password");
+
         // Users
         var u1 = new User
         {
             Id = "000000000000000000000001",
             Username = "Gustav",
             Email = "test@test.com",
-            Password = "password",
-            Salt = "salt"
+            Password = hashResult.Hash,
+            Salt = hashResult.Salt
         };
 
         var u2 = new User
@@ -71,8 +75,8 @@ public class CustomWebApplicationFactory : WebApplicationFactory<Program>
             Id = "000000000000000000000002",
             Username = "Simon",
             Email = "test@test.com",
-            Password = "password",
-            Salt = "salt"
+            Password = hashResult.Hash,
+            Salt = hashResult.Salt
         };
 
         var u3 = new User
@@ -80,8 +84,8 @@ public class CustomWebApplicationFactory : WebApplicationFactory<Program>
             Id = "000000000000000000000003",
             Username = "Nikolaj",
             Email = "test@test.com",
-            Password = "password",
-            Salt = "salt"
+            Password = hashResult.Hash,
+            Salt = hashResult.Salt
         };
 
          var u4 = new User
@@ -89,8 +93,8 @@ public class CustomWebApplicationFactory : WebApplicationFactory<Program>
             Id = "000000000000000000000004",
             Username = "Victor",
             Email = "test@test.com",
-            Password = "password",
-            Salt = "salt"
+            Password = hashResult.Hash,
+            Salt = hashResult.Salt
         };
 
         context.Users.InsertMany(new[] { u1, u2, u3, u4 });
