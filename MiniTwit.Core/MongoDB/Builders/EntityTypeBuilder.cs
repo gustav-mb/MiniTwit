@@ -3,16 +3,24 @@ using MongoDB.Driver;
 
 namespace MiniTwit.Core.MongoDB.Builders;
 
-public class EntityTypeBuilder<T> where T : class
+public class EntityTypeBuilder
 {
-    private readonly IMongoDatabase _database;
-    private readonly List<Action<IMongoCollection<T>>> _createIndexActions = new();
-    public IMongoCollection<T> Collection { get; private set; } = null!;
+    protected readonly IMongoDatabase Database;
 
     public EntityTypeBuilder(IMongoDatabase database)
     {
-        _database = database;
+        Database = database;
     }
+
+    protected internal virtual void ConfigureIndexes() { }
+}
+
+public class EntityTypeBuilder<T> : EntityTypeBuilder where T : class
+{
+    private readonly List<Action<IMongoCollection<T>>> _createIndexActions = new();
+    public IMongoCollection<T> Collection { get; private set; } = null!;
+
+    public EntityTypeBuilder(IMongoDatabase database) : base(database) { }
 
     public IndexBuilder<T> HasIndex(Expression<Func<T, object>> getCollectionActions)
     {
@@ -22,7 +30,12 @@ public class EntityTypeBuilder<T> where T : class
         return indexBuilder;
     }
 
-    internal void ConfigureIndexes()
+    public void ToCollection(string collectionName, MongoCollectionSettings? settings = null)
+    {
+        Collection = Database.GetCollection<T>(collectionName, settings);
+    }
+
+    protected internal override void ConfigureIndexes()
     {
         foreach (var createIndexAction in _createIndexActions)
         {
