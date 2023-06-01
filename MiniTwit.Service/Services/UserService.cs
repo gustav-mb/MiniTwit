@@ -69,7 +69,7 @@ public class UserService : IUserService
             return new APIResponse(BadRequest, USERNAME_MISSING);
         }
 
-        if (!userCreateDTO.Email.Contains("@"))
+        if (string.IsNullOrEmpty(userCreateDTO.Email) || !userCreateDTO.Email.Contains("@"))
         {
             return new APIResponse(BadRequest, EMAIL_MISSING_OR_INVALID);
         }
