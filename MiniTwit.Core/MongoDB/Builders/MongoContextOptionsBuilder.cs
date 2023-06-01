@@ -42,27 +42,30 @@ public class MongoContextOptionsBuilder : IMongoContextOptionsBuilder
             context.GetType().GetProperty(property.Name)!.SetValue(context, mongoCollection);
         }
 
-         ConfigureIndexes();
-
-        _isConfigured = true;
+        if (!_isConfigured)
+        {
+            ConfigureIndexes();
+            _isConfigured = true;
+        }
     }
 
     private object GetMongoCollectionInstance((string Name, Type Type) property)
     {
-        // Create EntityBuilder of type Type
+        // Create EntityBuilder type of type <Type>
         var builderType = typeof(EntityTypeBuilder<>).MakeGenericType(property.Type);
-        
+
         // Get existing EntityBuilder or create one if it doesn't exist
         var entityBuilder = _entityToBuilder.ContainsKey(property.Type) ? _entityToBuilder[property.Type] : Activator.CreateInstance(builderType, Database)!;
-        
+
         // Get Collection property of EntityBuilder
-        var collectionProperty = builderType.GetProperty("Collection")!;
+        var collectionProperty = builderType.GetProperty("Collection") ?? throw new InvalidOperationException("EntityTypeBuilder does not expose property 'Collection'");
         var mongoCollection = collectionProperty.GetValue(entityBuilder);
 
         // MongoCollection is not initialized
         if (mongoCollection == null)
         {
-            MethodInfo getCollectionMethod = Database.GetType().GetMethod("GetCollection") ?? throw new InvalidOperationException("IMongoDatabase does not expose GetCollection method");
+            // Get IMongoDatabase GetCollection<T> method using reflections, as we can't type them on compile-time
+            MethodInfo getCollectionMethod = Database.GetType().GetMethod(nameof(Database.GetCollection)) ?? throw new InvalidOperationException("IMongoDatabase does not expose GetCollection method");
             MethodInfo genericGetCollectionMethod = getCollectionMethod.MakeGenericMethod(property.Type);
 
             // Get new collection from MongoDB database
@@ -80,9 +83,10 @@ public class MongoContextOptionsBuilder : IMongoContextOptionsBuilder
 
     public EntityTypeBuilder<TEntity> Entity<TEntity>(Action<EntityTypeBuilder<TEntity>> buildAction) where TEntity : class
     {
-        var builder = _entityToBuilder.ContainsKey(typeof(TEntity)) ? _entityToBuilder[typeof(TEntity)] as EntityTypeBuilder<TEntity> : new EntityTypeBuilder<TEntity>(Database);
+        var entityType = typeof(TEntity);
+        var builder = _entityToBuilder.ContainsKey(entityType) ? _entityToBuilder[entityType] as EntityTypeBuilder<TEntity> : new EntityTypeBuilder<TEntity>(Database);
         buildAction.Invoke(builder!);
-        _entityToBuilder[typeof(TEntity)] = builder!;
+        _entityToBuilder[entityType] = builder!;
         return builder!;
     }
 
@@ -90,11 +94,8 @@ public class MongoContextOptionsBuilder : IMongoContextOptionsBuilder
     {
         foreach (var pair in _entityToBuilder)
         {
-            var builderType = typeof(EntityTypeBuilder<>).MakeGenericType(pair.Key);
-            var builder = _entityToBuilder[pair.Key];
-
-            // Call ConfigureIndexes on builder
-            builderType.InvokeMember("ConfigureIndexes", BindingFlags.InvokeMethod | BindingFlags.Instance | BindingFlags.NonPublic, Type.DefaultBinder, builder, null);
+            var builder = _entityToBuilder[pair.Key] as EntityTypeBuilder;
+            builder!.ConfigureIndexes();
         }
     }
 }
