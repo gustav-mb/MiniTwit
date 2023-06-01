@@ -1,4 +1,5 @@
-using MiniTwit.Core.Data;
+using MiniTwit.Core;
+using MiniTwit.Core.MongoDB.DependencyInjection;
 using MiniTwit.Core.IRepositories;
 using MiniTwit.Infrastructure;
 using MiniTwit.Infrastructure.Repositories;
@@ -10,9 +11,15 @@ var builder = WebApplication.CreateBuilder(args);
 // Add user-secrets if running in container
 builder.Configuration.AddKeyPerFile("/run/secrets", optional: true);
 
+var dbName = builder.Configuration.GetSection("MiniTwitDatabaseName").Value!;
+
 // Configure MongoDB
-builder.Services.Configure<MiniTwitDatabaseSettings>(builder.Configuration.GetSection(nameof(MiniTwitDatabaseSettings)));
-builder.Services.Configure<MiniTwitDatabaseSettings>(options => options.ConnectionString = builder.Configuration.GetConnectionString("MiniTwit")!);
+builder.Services.AddMongoContext<MiniTwitContext>(options => 
+{
+    options.ConnectionString = builder.Configuration.GetConnectionString(dbName)!;
+    options.DatabaseName = dbName;
+});
+builder.Services.AddScoped<IMiniTwitContext, MiniTwitContext>();
 
 // Configure Hashing
 builder.Services.Configure<HashSettings>(builder.Configuration.GetSection(nameof(HashSettings)));
@@ -25,7 +32,6 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 // Add Services
-builder.Services.AddSingleton<IMiniTwitContext, MiniTwitContext>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IFollowerRepository, FollowerRepository>();
 builder.Services.AddScoped<ITweetRepository, TweetRepository>();
