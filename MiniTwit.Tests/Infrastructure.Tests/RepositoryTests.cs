@@ -2,8 +2,8 @@ using System.Globalization;
 using EphemeralMongo;
 using MongoDB.Driver;
 using MiniTwit.Core.Entities;
-using MiniTwit.Core.MongoDB;
 using MiniTwit.Infrastructure;
+using MiniTwit.Core.MongoDB.Builders;
 
 namespace MiniTwit.Tests.Infrastructure.Tests;
 

@@ -1,5 +1,6 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
+using MiniTwit.Core.MongoDB.Builders;
 using MongoDB.Driver;
 
 namespace MiniTwit.Core.MongoDB.DependencyInjection;

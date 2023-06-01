@@ -1,17 +1,18 @@
+using MiniTwit.Core.MongoDB.Builders;
 using MongoDB.Driver;
 
 namespace MiniTwit.Core.MongoDB;
 
 public class MongoContext
 {
-    protected readonly IMongoContextOptionsBuilder OptionsBuilder;
-    public IMongoDatabase Database => OptionsBuilder.Database;
+    private readonly IMongoContextOptionsBuilder _optionsBuilder;
+    public IMongoDatabase Database => _optionsBuilder.Database;
 
     protected MongoContext(IMongoContextOptionsBuilder optionsBuilder)
     {
-        OptionsBuilder = optionsBuilder;
-        optionsBuilder.Configure(this, this.OnConfiguring);
+        _optionsBuilder = optionsBuilder;
+        optionsBuilder.Configure(this, (_) => this.OnConfiguring(_optionsBuilder));
     }
 
-    protected virtual void OnConfiguring() { }
+    protected virtual void OnConfiguring(IMongoContextOptionsBuilder builder) { }
 }
