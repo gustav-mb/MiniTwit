@@ -63,16 +63,16 @@ public class UserService : IUserService
 
     public async Task<APIResponse> RegisterUserAsync(UserCreateDTO userCreateDTO)
     {
+        if (string.IsNullOrEmpty(userCreateDTO.Username))
+        {
+            return new APIResponse(BadRequest, USERNAME_MISSING);
+        }
+
         var dbResult = await _repository.GetByUsernameAsync(userCreateDTO.Username);
 
         if (dbResult.Model != null)
         {
             return new APIResponse(Conflict, USERNAME_TAKEN);
-        }
-
-        if (string.IsNullOrEmpty(userCreateDTO.Username))
-        {
-            return new APIResponse(BadRequest, USERNAME_MISSING);
         }
 
         if (string.IsNullOrEmpty(userCreateDTO.Email) || !userCreateDTO.Email.Contains("@"))
