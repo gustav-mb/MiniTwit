@@ -12,7 +12,7 @@ namespace MiniTwit.Tests.Server.Tests.Controllers;
 
 public class FollowerControllerTests
 {
-    private Mock<ILogger<FollowerController>> _logger;
+    private readonly Mock<ILogger<FollowerController>> _logger;
 
     public FollowerControllerTests()
     {
