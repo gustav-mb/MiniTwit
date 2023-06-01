@@ -43,6 +43,7 @@ public class UserService : IUserService
         return new APIResponse<UserDTO>(Ok, dbResult.ConvertModelTo<UserDTO>());
     }
 
+    // TODO: NOT USED; ONLY TESTED
     public async Task<APIResponse<UserDTO>> GetUserByUsernameAsync(string username, CancellationToken ct = default)
     {
         var dbResult = await _repository.GetByUsernameAsync(username, ct);
@@ -69,7 +70,7 @@ public class UserService : IUserService
             return new APIResponse(BadRequest, USERNAME_MISSING);
         }
 
-        if (!userCreateDTO.Email.Contains("@"))
+        if (string.IsNullOrEmpty(userCreateDTO.Email) || !userCreateDTO.Email.Contains("@"))
         {
             return new APIResponse(BadRequest, EMAIL_MISSING_OR_INVALID);
         }

@@ -26,7 +26,7 @@ public static class DBErrorExtensions
         FOLLOW_SELF => "Can't follow yourself",
         UNFOLLOW_SELF => "Can't unfollow yourself",
         USERNAME_TAKEN => "Username is already taken",
-        USERNAME_MISSING => "Username misssing",
+        USERNAME_MISSING => "Username is missing",
         EMAIL_MISSING_OR_INVALID => "Email is missing or invalid",
         PASSWORD_MISSING => "Password is missing",
         _ => "Unknown error!"

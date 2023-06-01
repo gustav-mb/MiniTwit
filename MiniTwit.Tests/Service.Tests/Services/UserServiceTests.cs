@@ -142,25 +142,30 @@ public class UserServiceTests
         Assert.Equal(expected, actual);
     }
 
-    [Fact]
-    public async Task RegisterUserAsync_given_empty_username_returns_BadRequest_with_UsernameMissing()
+    [Theory]
+    [InlineData("")]
+    [InlineData(null)]
+    public async Task RegisterUserAsync_given_null_or_empty_username_returns_BadRequest_with_UsernameMissing(string username)
     {
         // Arrange
         var expected = new APIResponse(BadRequest, USERNAME_MISSING);
 
         var repository = new Mock<IUserRepository>();
-        repository.Setup(r => r.GetByUsernameAsync("", _ct)).ReturnsAsync(new DBResult<User>{ Model = null, DBError = INVALID_USERNAME });
+        repository.Setup(r => r.GetByUsernameAsync(username, _ct)).ReturnsAsync(new DBResult<User>{ Model = null, DBError = INVALID_USERNAME });
         var service = new UserService(repository.Object, _hasher.Object);
 
         // Act
-        var actual = await service.RegisterUserAsync(new UserCreateDTO { Username = "", Email = "test@test.com", Password = "password" });
+        var actual = await service.RegisterUserAsync(new UserCreateDTO { Username = username, Email = "test@test.com", Password = "password" });
         
         // Assert
         Assert.Equal(expected, actual);
     }
 
-    [Fact]
-    public async Task RegisterUserAsync_given_invalid_email_returns_BadRequest_with_EmailMissingOrInvalid()
+    [Theory]
+    [InlineData("testtest.com")]
+    [InlineData("")]
+    [InlineData(null)]
+    public async Task RegisterUserAsync_given_null_empty_or_invalid_email_returns_BadRequest_with_EmailMissingOrInvalid(string email)
     {
         // Arrange
         var expected = new APIResponse(BadRequest, EMAIL_MISSING_OR_INVALID);
@@ -170,14 +175,16 @@ public class UserServiceTests
         var service = new UserService(repository.Object, _hasher.Object);
 
         // Act
-        var actual = await service.RegisterUserAsync(new UserCreateDTO { Username = "Gustav", Email = "testtest.com", Password = "password" });
+        var actual = await service.RegisterUserAsync(new UserCreateDTO { Username = "Gustav", Email = email, Password = "password" });
         
         // Assert
         Assert.Equal(expected, actual);
     }
 
-    [Fact]
-    public async Task RegisterUserAsync_given_empty_password_returns_BadRequest_with_PasswordMissing()
+    [Theory]
+    [InlineData("")]
+    [InlineData(null)]
+    public async Task RegisterUserAsync_given_null_or_empty_password_returns_BadRequest_with_PasswordMissing(string password)
     {
         // Arrange
         var expected = new APIResponse(BadRequest, PASSWORD_MISSING);
@@ -187,7 +194,7 @@ public class UserServiceTests
         var service = new UserService(repository.Object, _hasher.Object);
 
         // Act
-        var actual = await service.RegisterUserAsync(new UserCreateDTO { Username = "Gustav", Email = "test@test.com", Password = "" });
+        var actual = await service.RegisterUserAsync(new UserCreateDTO { Username = "Gustav", Email = "test@test.com", Password = password });
         
         // Assert
         Assert.Equal(expected, actual);

@@ -21,26 +21,26 @@ public class TweetController : ControllerBase
     [HttpGet]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<ActionResult<IEnumerable<TweetDTO>>> Timeline([FromQuery] string userId, CancellationToken ct = default)
+    public async Task<ActionResult<IEnumerable<TweetDTO>>> Timeline([FromQuery] string userId, [FromQuery] int? limit = null,  CancellationToken ct = default)
     {
-        var response = await _serviceManager.TweetService.GetUsersAndFollowedNonFlaggedTweetsAsync(userId, 30, ct);
+        var response = await _serviceManager.TweetService.GetUsersAndFollowedNonFlaggedTweetsAsync(userId, limit, ct);
         return response.ToActionResult();
     }
 
     [HttpGet("public")]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    public async Task<ActionResult<IEnumerable<TweetDTO>>> PublicTimeline(CancellationToken ct = default)
+    public async Task<ActionResult<IEnumerable<TweetDTO>>> PublicTimeline([FromQuery] int? limit = null, CancellationToken ct = default)
     {
-        var response = await _serviceManager.TweetService.GetAllNonFlaggedTweetsAsync(30, ct);
+        var response = await _serviceManager.TweetService.GetAllNonFlaggedTweetsAsync(limit, ct);
         return response.ToActionResult();
     }
 
     [HttpGet("{username}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<ActionResult<IEnumerable<TweetDTO>>> UserTimeline(string username, CancellationToken ct = default)
+    public async Task<ActionResult<IEnumerable<TweetDTO>>> UserTimeline(string username, [FromQuery] int? limit = null, CancellationToken ct = default)
     {
-        var response = await _serviceManager.TweetService.GetUsersTweetsAsync(username, 30, ct);
+        var response = await _serviceManager.TweetService.GetUsersTweetsAsync(username, null, ct);
         return response.ToActionResult();
     }
 
