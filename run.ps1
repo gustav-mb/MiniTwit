@@ -1,0 +1,56 @@
+function Println {
+    Param([string]$text = "", [string]$fcolor = "White", [string]$bcolor = "Black")
+    Write-Host $text -ForeGroundColor $fcolor -BackgroundColor $bcolor
+}
+
+function Setup-Secrets {
+    Println "Creating secrets..." Green
+
+    $db_password = Get-Content .\.local\db_password.txt
+    $connection_string = "mongodb://minitwit:$db_password@localhost:27018"
+
+    dotnet user-secrets init --project MiniTwit.Server
+    dotnet user-secrets set "ConnectionStrings:MiniTwit" $connection_string --project MiniTwit.Server
+
+    Println "Done." Green
+}
+
+function Start-Backend {
+    Println "Starting MongoDB..." Green
+
+    $db_password = Get-Content .\.local\db_password.txt
+    docker run --rm --name mongodb -d -p 27018:27017 -e "MONGO_INITDB_ROOT_USERNAME=minitwit" -e "MONGO_INITDB_ROOT_PASSWORD=$db_password" mongo:latest
+
+    Println "Starting MiniTwit Backend..." Green
+    dotnet run --project MiniTwit.Server
+
+    Println "Stopping and removing MongoDB..." Red
+    docker stop mongodb
+}
+
+function Print-Help {
+    Println "--- RUN HELP ---" Green
+    Println "Available Commands:"
+    Println ">> Run the MiniTwit Backend and datase"
+    Println ">> secrets - Initialize .NET Secrets"
+    Println ">> stop - Stop MongoDB"
+    Println ">> -h - Print this page"
+    Println "----------------" Green
+}
+
+if ($args.Count -eq 0) {
+    Start-Backend
+}
+elseif ($args[0] -eq "secrets") {
+    Setup-Secrets
+}
+elseif ($args[0] -eq "stop") {
+    docker stop mongodb
+}
+elseif ($args[0] -eq "-h") {
+    Print-Help
+}
+else {
+    Println "Error: Unknown command" Red
+    Println "For a list of available commands type './run.ps1 -h'" Red
+}

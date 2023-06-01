@@ -1,23 +1,24 @@
-using Microsoft.Extensions.Options;
-using MiniTwit.Core.Data;
+using MiniTwit.Core;
 using MiniTwit.Core.Entities;
+using MiniTwit.Core.MongoDB;
+using MiniTwit.Core.MongoDB.Builders;
 using MongoDB.Driver;
 
 namespace MiniTwit.Infrastructure;
 
-public class MiniTwitContext : IMiniTwitContext
+public class MiniTwitContext : MongoContext, IMiniTwitContext
 {
-    public IMongoCollection<User> Users { get; init; }
-    public IMongoCollection<Follower> Followers { get; init; }
-    public IMongoCollection<Tweet> Tweets { get; init; }
+    public IMongoCollection<User> Users { get; set; } = null!;
+    public IMongoCollection<Follower> Followers { get; set; } = null!;
+    public IMongoCollection<Tweet> Tweets { get; set; } = null!;
 
-    public MiniTwitContext(IOptions<MiniTwitDatabaseSettings> databaseSettings)
+    public MiniTwitContext(IMongoContextOptionsBuilder optionsBuilder) : base(optionsBuilder) { }
+
+    protected override void OnConfiguring(IMongoContextOptionsBuilder builder)
     {
-        var mongoClient = new MongoClient(databaseSettings.Value.ConnectionString);
-        var mongoDatabase = mongoClient.GetDatabase(databaseSettings.Value.DatabaseName);
-
-        Users = mongoDatabase.GetCollection<User>(databaseSettings.Value.UsersCollectionName);
-        Followers = mongoDatabase.GetCollection<Follower>(databaseSettings.Value.FollowersCollectionName);
-        Tweets = mongoDatabase.GetCollection<Tweet>(databaseSettings.Value.TweetsCollectionName);
+        builder.Entity<Tweet>(e => 
+        {
+            e.ToCollection("Messages");
+        });
     }
 }
