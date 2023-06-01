@@ -43,6 +43,7 @@ public class UserService : IUserService
         return new APIResponse<UserDTO>(Ok, dbResult.ConvertModelTo<UserDTO>());
     }
 
+    // TODO: NOT USED; ONLY TESTED
     public async Task<APIResponse<UserDTO>> GetUserByUsernameAsync(string username, CancellationToken ct = default)
     {
         var dbResult = await _repository.GetByUsernameAsync(username, ct);
