@@ -1,5 +1,5 @@
 using MongoDB.Driver;
-using MiniTwit.Core.Data;
+using MiniTwit.Core;
 using MiniTwit.Core.IRepositories;
 using MiniTwit.Core.Responses;
 using MiniTwit.Core.Entities;

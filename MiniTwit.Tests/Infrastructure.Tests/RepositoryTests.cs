@@ -1,9 +1,9 @@
 using System.Globalization;
 using EphemeralMongo;
-using Microsoft.Extensions.Options;
-using MiniTwit.Core.Data;
+using MongoDB.Driver;
 using MiniTwit.Core.Entities;
 using MiniTwit.Infrastructure;
+using MiniTwit.Core.MongoDB.Builders;
 
 namespace MiniTwit.Tests.Infrastructure.Tests;
 
@@ -22,16 +22,9 @@ public class RepositoryTests : IDisposable
 
         _runner = MongoRunner.Run(options);
 
-        var dbSettings = new MiniTwitDatabaseSettings
-        {
-            ConnectionString = _runner.ConnectionString,
-            DatabaseName = "MiniTwit",
-            UsersCollectionName = "Users",
-            FollowersCollectionName = "Followers",
-            TweetsCollectionName = "Tweets"
-        };
-
-        Context = new MiniTwitContext(Options.Create<MiniTwitDatabaseSettings>(dbSettings));
+        var database = new MongoClient(_runner.ConnectionString).GetDatabase("MiniTwit");
+        var builder = new MongoContextOptionsBuilder(database);
+        Context = new MiniTwitContext(builder);
 
         SeedTestData();
     }

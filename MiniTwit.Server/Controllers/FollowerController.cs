@@ -17,7 +17,7 @@ public class FollowerController : ControllerBase
         _logger = logger;
     }
 
-    [HttpPost("/{username}/follow")]
+    [HttpPost("{username}/follow")]
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -27,7 +27,7 @@ public class FollowerController : ControllerBase
         return response.ToActionResult();
     }
 
-    [HttpDelete("/{username}/unfollow")]
+    [HttpDelete("{username}/unfollow")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
