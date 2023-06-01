@@ -16,9 +16,9 @@ public class MiniTwitContext : MongoContext, IMiniTwitContext
 
     protected override void OnConfiguring(IMongoContextOptionsBuilder builder)
     {
-        builder.Entity<User>(e => 
+        builder.Entity<Tweet>(e => 
         {
-            e.HasIndex(u => u.Email).Ascending();
+            e.ToCollection("Messages");
         });
     }
 }
