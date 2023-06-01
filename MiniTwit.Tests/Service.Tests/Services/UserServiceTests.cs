@@ -159,8 +159,10 @@ public class UserServiceTests
         Assert.Equal(expected, actual);
     }
 
-    [Fact]
-    public async Task RegisterUserAsync_given_invalid_email_returns_BadRequest_with_EmailMissingOrInvalid()
+    [Theory]
+    [InlineData("testtest.com")]
+    [InlineData("")]
+    public async Task RegisterUserAsync_given_invalid_email_returns_BadRequest_with_EmailMissingOrInvalid(string email)
     {
         // Arrange
         var expected = new APIResponse(BadRequest, EMAIL_MISSING_OR_INVALID);
@@ -170,7 +172,7 @@ public class UserServiceTests
         var service = new UserService(repository.Object, _hasher.Object);
 
         // Act
-        var actual = await service.RegisterUserAsync(new UserCreateDTO { Username = "Gustav", Email = "testtest.com", Password = "password" });
+        var actual = await service.RegisterUserAsync(new UserCreateDTO { Username = "Gustav", Email = email, Password = "password" });
         
         // Assert
         Assert.Equal(expected, actual);
