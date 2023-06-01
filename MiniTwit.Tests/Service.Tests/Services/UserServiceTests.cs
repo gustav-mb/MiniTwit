@@ -39,6 +39,22 @@ public class UserServiceTests
     }
 
     [Fact]
+    public async Task AuthenticateAsync_given_empty_username_returns_Unauthorized_with_UsernameMissing()
+    {
+        // Arrange
+        var expected = new APIResponse<UserDTO>(Unauthorized, null, USERNAME_MISSING);
+
+        var repository = new Mock<IUserRepository>();
+        var service = new UserService(repository.Object, _hasher.Object);
+
+        // Act
+        var actual = await service.AuthenticateAsync(new LoginDTO { Username = "", Password = "password" });
+        
+        // Assert
+        Assert.Equal(expected, actual);
+    }
+
+    [Fact]
     public async Task AuthenticateAsync_given_empty_password_returns_Unauthorized_with_Password_Missing()
     {
         // Arrange
