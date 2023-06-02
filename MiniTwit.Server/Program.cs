@@ -5,16 +5,19 @@ using MiniTwit.Infrastructure;
 using MiniTwit.Infrastructure.Repositories;
 using MiniTwit.Security.Hashing;
 using MiniTwit.Service;
+using Microsoft.AspNetCore.Mvc;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add user-secrets if running in container
 builder.Configuration.AddKeyPerFile("/run/secrets", optional: true);
 
-var dbName = builder.Configuration.GetSection("MiniTwitDatabaseName").Value!;
+// Suppress auto generation of BadRequest on model invalidation binding
+builder.Services.Configure<ApiBehaviorOptions>(options => options.SuppressModelStateInvalidFilter = true);
 
 // Configure MongoDB
-builder.Services.AddMongoContext<MiniTwitContext>(options => 
+var dbName = builder.Configuration.GetSection("MiniTwitDatabaseName").Value!;
+builder.Services.AddMongoContext<MiniTwitContext>(options =>
 {
     options.ConnectionString = builder.Configuration.GetConnectionString(dbName)!;
     options.DatabaseName = dbName;
