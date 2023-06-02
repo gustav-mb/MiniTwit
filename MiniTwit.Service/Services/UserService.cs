@@ -21,9 +21,14 @@ public class UserService : IUserService
 
     public async Task<APIResponse<UserDTO>> AuthenticateAsync(LoginDTO loginDTO)
     {
+        if (string.IsNullOrEmpty(loginDTO.Username))
+        {
+            return new APIResponse<UserDTO>(Unauthorized, null, USERNAME_MISSING);
+        }
+        
         var dbResult = await _repository.GetByUsernameAsync(loginDTO.Username);
 
-        if (dbResult.DBError == INVALID_USERNAME)
+        if (dbResult.DBError != null)
         {
             return new APIResponse<UserDTO>(Unauthorized, null, dbResult.DBError);
         }
@@ -58,16 +63,16 @@ public class UserService : IUserService
 
     public async Task<APIResponse> RegisterUserAsync(UserCreateDTO userCreateDTO)
     {
+        if (string.IsNullOrEmpty(userCreateDTO.Username))
+        {
+            return new APIResponse(BadRequest, USERNAME_MISSING);
+        }
+
         var dbResult = await _repository.GetByUsernameAsync(userCreateDTO.Username);
 
         if (dbResult.Model != null)
         {
             return new APIResponse(Conflict, USERNAME_TAKEN);
-        }
-
-        if (string.IsNullOrEmpty(userCreateDTO.Username))
-        {
-            return new APIResponse(BadRequest, USERNAME_MISSING);
         }
 
         if (string.IsNullOrEmpty(userCreateDTO.Email) || !userCreateDTO.Email.Contains("@"))

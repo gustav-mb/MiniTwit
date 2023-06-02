@@ -90,6 +90,12 @@ public class TweetRepository : ITweetRepository
             };
         }
 
+        // If limit is 0 return all
+        if (limit == 0 || limit == null)
+        {
+            limit = int.MaxValue;
+        }
+
         var tweets = _context.Tweets.AsQueryable();
         var users = _context.Users.AsQueryable();
         var followers = _context.Followers.AsQueryable();
@@ -99,7 +105,7 @@ public class TweetRepository : ITweetRepository
             .Where(tuf => !tuf.tweet.Flagged && tuf.user.Id == userId || tuf.follower.WhoId == userId)
             .Select(tuf => tuf.tweet)
             .OrderByDescending(tweet => tweet.PubDate)
-            .Take(limit ?? int.MaxValue)
+            .Take(Math.Abs((int)limit))
             .ToList();
 
         return new DBResult<IEnumerable<Tweet>>

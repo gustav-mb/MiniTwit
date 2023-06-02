@@ -33,6 +33,17 @@ public class Argon2HasherTests
     }
 
     [Fact]
+    public void Hash_creates_different_hashes_given_same_input()
+    {
+        // Act
+        var actual1 = _hasher.Hash("password");
+        var actual2 =  _hasher.Hash("password");
+
+        // Assert
+        Assert.NotEqual(actual1, actual2);
+    }
+
+    [Fact]
     public async Task HashAsync_creates_different_hashes_given_same_input()
     {
         // Act
@@ -41,6 +52,19 @@ public class Argon2HasherTests
 
         // Assert
         Assert.NotEqual(actual1, actual2);
+    }
+
+    [Fact]
+    public void VerifyHash_returns_true_when_data_and_hash_are_equal()
+    {
+        // Arrange
+        var hashResult = _hasher.Hash("password");
+
+        // Act
+        var actual = _hasher.VerifyHash("password", hashResult.Hash, hashResult.Salt);
+
+        // Assert
+        Assert.True(actual);
     }
 
     [Fact]
@@ -54,6 +78,19 @@ public class Argon2HasherTests
 
         // Assert
         Assert.True(actual);
+    }
+
+    [Fact]
+    public void VerifyHash_returns_false_when_data_and_hash_are_not_equal()
+    {
+        // Arrange
+        var hashResult = _hasher.Hash("password");
+
+        // Act
+        var actual = _hasher.VerifyHash("pass", hashResult.Hash, hashResult.Salt);
+
+        // Assert
+        Assert.False(actual);
     }
 
     [Fact]

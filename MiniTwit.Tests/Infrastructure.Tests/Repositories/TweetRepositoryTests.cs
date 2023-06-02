@@ -67,17 +67,17 @@ public class TweetRepositoryTests : RepositoryTests
         };
 
         // Act
-        var actual = await _repository.GetAllByUsernameAsync("Test");
+        var actual = await _repository.GetAllByUsernameAsync("Test", null);
 
         // Assert
         Assert.Equal(expected, actual);
     }
 
     [Fact]
-    public async Task GetAllByUsernameAsync_given_valid_username_returns_all_Tweets()
+    public async Task GetAllByUsernameAsync_with_null_limit_given_valid_username_returns_all_Tweets()
     {
         // Act
-        var actual = await _repository.GetAllByUsernameAsync("Gustav");
+        var actual = await _repository.GetAllByUsernameAsync("Gustav", null);
 
         // Assert
         Assert.Null(actual.DBError);
@@ -89,11 +89,31 @@ public class TweetRepositoryTests : RepositoryTests
         );
     }
 
-    [Fact]
-    public async Task GetAllNonFlaggedAsync_returns_all_non_flagged_Tweets()
+    [Theory]
+    [InlineData(3, -4)]
+    [InlineData(3, -3)]
+    [InlineData(1, -1)]
+    [InlineData(3, null)]
+    [InlineData(3, 0)]
+    [InlineData(1, 1)]
+    [InlineData(3, 3)]
+    [InlineData(3, 4)]
+    public async Task GetAllByUsernameAsync_given_valid_username_and_limit_returns_limit_number_of_Tweets(int expected, int? limit)
     {
         // Act
-        var actual = await _repository.GetAllNonFlaggedAsync();
+        var actual = await _repository.GetAllByUsernameAsync("Gustav", limit);
+
+        // Assert
+        Assert.Null(actual.DBError);
+        Assert.NotNull(actual.Model);
+        Assert.Equal(expected, actual.Model.Count());
+    }
+
+    [Fact]
+    public async Task GetAllNonFlaggedAsync_with_null_limit_returns_all_non_flagged_Tweets()
+    {
+        // Act
+        var actual = await _repository.GetAllNonFlaggedAsync(null);
 
         // Assert
         Assert.Null(actual.DBError);
@@ -111,6 +131,26 @@ public class TweetRepositoryTests : RepositoryTests
         );
     }
 
+    [Theory]
+    [InlineData(9, -10)]
+    [InlineData(9, -9)]
+    [InlineData(1, -1)]
+    [InlineData(9, null)]
+    [InlineData(9, 0)]
+    [InlineData(1, 1)]
+    [InlineData(9, 9)]
+    [InlineData(9, 10)]
+    public async Task GetAllNonFlaggedAsync_returns_limit_number_of_non_flagged_Tweets(int expected, int? limit)
+    {
+        // Act
+        var actual = await _repository.GetAllNonFlaggedAsync(limit);
+
+        // Assert
+        Assert.Null(actual.DBError);
+        Assert.NotNull(actual.Model);
+        Assert.Equal(expected, actual.Model.Count());
+    }
+
     [Fact]
     public async Task GetAllNonFlaggedFollowedByUserIdAsync_given_invalid_userId_returns_InvalidUserId()
     {
@@ -122,7 +162,7 @@ public class TweetRepositoryTests : RepositoryTests
         };
 
         // Act
-        var actual = await _repository.GetAllNonFlaggedFollowedByUserIdAsync("000000000000000000000000");
+        var actual = await _repository.GetAllNonFlaggedFollowedByUserIdAsync("000000000000000000000000", null);
 
         // Assert
         Assert.Equal(expected, actual);
@@ -132,7 +172,7 @@ public class TweetRepositoryTests : RepositoryTests
     public async Task GetAllNonFlaggedFollowedByUserIdAsync_given_valid_userId_returns_all_non_flagged_tweets_of_userId_and_its_followers()
     {
         // Act
-        var actual = await _repository.GetAllNonFlaggedFollowedByUserIdAsync("000000000000000000000001");
+        var actual = await _repository.GetAllNonFlaggedFollowedByUserIdAsync("000000000000000000000001", null);
 
         // Assert
         Assert.Null(actual.DBError);
@@ -144,5 +184,25 @@ public class TweetRepositoryTests : RepositoryTests
             tweet => tweet.Should().BeEquivalentTo(new Tweet { Id = "000000000000000000000001", AuthorId = "000000000000000000000001", Text = "Gustav's first tweet!", PubDate = DateTime.Parse("01/01/2023 12:00:00"), Flagged = false }),
             tweet => tweet.Should().BeEquivalentTo(new Tweet { Id = "000000000000000000000002", AuthorId = "000000000000000000000001", Text = "Gustav's second tweet!", PubDate = DateTime.Parse("01/01/2023 12:00:00"), Flagged = false })
         );
+    }
+
+    [Theory]
+    [InlineData(5, -6)]
+    [InlineData(5, -5)]
+    [InlineData(1, -1)]
+    [InlineData(5, null)]
+    [InlineData(5, 0)]
+    [InlineData(1, 1)]
+    [InlineData(5, 5)]
+    [InlineData(5, 6)]
+    public async Task GetAllNonFlaggedFollowedByUserIdAsync_given_valid_userId_and_limit_returns_limit_number_of_non_flagged_tweets_of_userId_and_its_followers(int expected, int? limit)
+    {
+        // Act
+        var actual = await _repository.GetAllNonFlaggedFollowedByUserIdAsync("000000000000000000000001", limit);
+
+        // Assert
+        Assert.Null(actual.DBError);
+        Assert.NotNull(actual.Model);
+        Assert.Equal(expected, actual.Model.Count());
     }
 }

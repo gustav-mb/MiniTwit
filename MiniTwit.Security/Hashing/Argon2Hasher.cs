@@ -14,19 +14,36 @@ public class Argon2Hasher : IHasher
         _settings = settings.Value;
     }
 
+    public (string Hash, string Salt) Hash(string data)
+    {
+        var salt = CreateSalt();
+        var hash = Hash(data, salt);
+
+        return (Convert.ToBase64String(hash), Convert.ToBase64String(salt));
+    }
+
     public async Task<(string Hash, string Salt)> HashAsync(string data)
     {
         var salt = CreateSalt();
-        var hash = await Hash(data, salt);
+        var hash = await HashAsync(data, salt);
 
         return (Convert.ToBase64String(hash), Convert.ToBase64String(salt));
+    }
+
+    public bool VerifyHash(string data, string hash, string salt)
+    {
+        var hashByte = Convert.FromBase64String(hash);
+        var saltByte = Convert.FromBase64String(salt);
+        var dataHash = Hash(data, saltByte);
+
+        return hashByte.SequenceEqual(dataHash);
     }
 
     public async Task<bool> VerifyHashAsync(string data, string hash, string salt)
     {
         var hashByte = Convert.FromBase64String(hash);
         var saltByte = Convert.FromBase64String(salt);
-        var dataHash = await Hash(data, saltByte);
+        var dataHash = await HashAsync(data, saltByte);
 
         return hashByte.SequenceEqual(dataHash);
     }
@@ -40,7 +57,19 @@ public class Argon2Hasher : IHasher
         return buffer;
     }
 
-    private async Task<byte[]> Hash(string data, byte[] salt)
+    private async Task<byte[]> HashAsync(string data, byte[] salt)
+    {
+        var argon2 = SetupArgon(data, salt);
+        return await argon2.GetBytesAsync(_settings.TagLength);
+    }
+
+    private byte[] Hash(string data, byte[] salt)
+    {
+        var argon2 = SetupArgon(data, salt);
+        return argon2.GetBytes(_settings.TagLength);
+    }
+
+    private Argon2id SetupArgon(string data, byte[] salt)
     {
         byte[] bytes = Encoding.UTF8.GetBytes(data);
         var argon2 = new Argon2id(bytes);
@@ -49,6 +78,6 @@ public class Argon2Hasher : IHasher
         argon2.Iterations = _settings.Iterations;
         argon2.MemorySize = _settings.MemorySizeMB;
 
-        return await argon2.GetBytesAsync(_settings.TagLength);
+        return argon2;
     }
 }
