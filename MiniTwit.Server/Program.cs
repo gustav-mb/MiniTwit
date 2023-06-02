@@ -6,6 +6,7 @@ using MiniTwit.Infrastructure.Repositories;
 using MiniTwit.Security.Hashing;
 using MiniTwit.Service;
 using Microsoft.AspNetCore.Mvc;
+using MiniTwit.Server.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -31,8 +32,7 @@ builder.Services.AddScoped<IHasher, Argon2Hasher>();
 // Add services to the container.
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwagger();
 
 // Add Services
 builder.Services.AddScoped<IUserRepository, UserRepository>();

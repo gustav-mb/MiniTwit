@@ -4,7 +4,7 @@ namespace MiniTwit.Server.Extensions;
 
 public static class ServiceCollectionExtensions
 {
-    public static IServiceCollection ConfigureSwagger(this IServiceCollection services)
+    public static IServiceCollection AddSwagger(this IServiceCollection services)
     {
         services.AddEndpointsApiExplorer();
         services.AddSwaggerGen(options => 
