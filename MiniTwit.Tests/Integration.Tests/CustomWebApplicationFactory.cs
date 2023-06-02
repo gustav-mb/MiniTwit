@@ -3,11 +3,12 @@ using System.Globalization;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.AspNetCore.Authentication;
 using MiniTwit.Infrastructure;
+using MiniTwit.Security.Hashing;
 using MiniTwit.Core.MongoDB.DependencyInjection;
 using MiniTwit.Core.Entities;
 using MiniTwit.Core;
-using MiniTwit.Security.Hashing;
 
 namespace MiniTwit.Tests.Integration.Tests;
 
@@ -37,15 +38,23 @@ public class CustomWebApplicationFactory : WebApplicationFactory<Program>
                 services.Remove(mongoContext);
             }
 
+            // Add Test Scheme defined in TestAuthHandler
+            services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = "Test";
+                options.DefaultChallengeScheme = "Test";
+                options.DefaultScheme = "Test";
+            }).AddScheme<AuthenticationSchemeOptions, TestAuthHandler>("Test", options => { });
+
             services.AddMongoContext<IMiniTwitContext, MiniTwitContext>(options =>
             {
                 options.ConnectionString = _runner.ConnectionString;
-                options.DatabaseName = "MiniTwit";
+                options.DatabaseName = "MiniTwitTest";
             });
 
             var provider = services.BuildServiceProvider();
             using var scope = provider.CreateScope();
-            var appContext = scope.ServiceProvider.GetRequiredService<MiniTwitContext>();
+            var appContext = scope.ServiceProvider.GetRequiredService<IMiniTwitContext>();
             var hasher  = scope.ServiceProvider.GetRequiredService<IHasher>();
             
             Seed(appContext, hasher);
