@@ -37,7 +37,7 @@ public class CustomWebApplicationFactory : WebApplicationFactory<Program>
                 services.Remove(mongoContext);
             }
 
-            services.AddMongoContext<MiniTwitContext>(options =>
+            services.AddMongoContext<IMiniTwitContext, MiniTwitContext>(options =>
             {
                 options.ConnectionString = _runner.ConnectionString;
                 options.DatabaseName = "MiniTwit";
