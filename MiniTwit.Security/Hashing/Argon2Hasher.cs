@@ -7,9 +7,9 @@ namespace MiniTwit.Security.Hashing;
 
 public class Argon2Hasher : IHasher
 {
-    private readonly HashSettings _settings;
+    private readonly Argon2HashSettings _settings;
 
-    public Argon2Hasher(IOptions<HashSettings> settings)
+    public Argon2Hasher(IOptions<Argon2HashSettings> settings)
     {
         _settings = settings.Value;
     }

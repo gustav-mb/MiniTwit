@@ -1,6 +1,6 @@
 namespace MiniTwit.Security.Hashing;
 
-public class HashSettings
+public class Argon2HashSettings
 {
     public int DegreeOfParallelism { get; set; }
     public int Iterations { get; set; }

@@ -5,8 +5,9 @@ using MiniTwit.Infrastructure;
 using MiniTwit.Infrastructure.Repositories;
 using MiniTwit.Security.Hashing;
 using MiniTwit.Service;
-using Microsoft.AspNetCore.Mvc;
 using MiniTwit.Server.Extensions;
+using MiniTwit.Security.Authentication;
+using Microsoft.AspNetCore.Mvc;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -16,17 +17,22 @@ builder.Configuration.AddKeyPerFile("/run/secrets", optional: true);
 // Suppress auto generation of BadRequest on model invalidation binding
 builder.Services.Configure<ApiBehaviorOptions>(options => options.SuppressModelStateInvalidFilter = true);
 
+// Add Services
+builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IFollowerRepository, FollowerRepository>();
+builder.Services.AddScoped<ITweetRepository, TweetRepository>();
+builder.Services.AddScoped<IServiceManager, ServiceManager>();
+
 // Configure MongoDB
 var dbName = builder.Configuration.GetSection("MiniTwitDatabaseName").Value!;
-builder.Services.AddMongoContext<MiniTwitContext>(options =>
+builder.Services.AddMongoContext<IMiniTwitContext, MiniTwitContext>(options =>
 {
     options.ConnectionString = builder.Configuration.GetConnectionString(dbName)!;
     options.DatabaseName = dbName;
 });
-builder.Services.AddScoped<IMiniTwitContext, MiniTwitContext>();
 
 // Configure Hashing
-builder.Services.Configure<HashSettings>(builder.Configuration.GetSection(nameof(HashSettings)));
+builder.Services.Configure<Argon2HashSettings>(builder.Configuration.GetSection(nameof(Argon2HashSettings)));
 builder.Services.AddScoped<IHasher, Argon2Hasher>();
 
 // Add services to the container.
@@ -34,11 +40,10 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddSwagger();
 
-// Add Services
-builder.Services.AddScoped<IUserRepository, UserRepository>();
-builder.Services.AddScoped<IFollowerRepository, FollowerRepository>();
-builder.Services.AddScoped<ITweetRepository, TweetRepository>();
-builder.Services.AddScoped<IServiceManager, ServiceManager>();
+// JWT Authentication
+builder.Services.AddJwtAuthentication(builder.Configuration);
+
+builder.Services.AddAuthorization();
 
 var app = builder.Build();
 
