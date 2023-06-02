@@ -1,9 +1,11 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MiniTwit.Core.DTOs;
 using MiniTwit.Service;
 
 namespace MiniTwit.Server.Controllers;
 
+[Authorize]
 [ApiController]
 [Produces("application/json")]
 [Route("[controller]")]
@@ -18,6 +20,7 @@ public class UserController : ControllerBase
         _logger = logger;
     }
 
+    [AllowAnonymous]
     [HttpPost("login")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
@@ -27,6 +30,7 @@ public class UserController : ControllerBase
         return response.ToActionResult();
     }
 
+    [AllowAnonymous]
     [HttpPost("register")]
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]

@@ -1,8 +1,10 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MiniTwit.Service;
 
 namespace MiniTwit.Server.Controllers;
 
+[Authorize]
 [ApiController]
 [Produces("application/json")]
 [Route("[controller]")]
