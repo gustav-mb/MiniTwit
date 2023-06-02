@@ -4,7 +4,6 @@ using MiniTwit.Service;
 
 namespace MiniTwit.Server.Controllers;
 
-[Authorize]
 [ApiController]
 [Produces("application/json")]
 [Route("[controller]")]
@@ -19,6 +18,7 @@ public class FollowerController : ControllerBase
         _logger = logger;
     }
 
+    [Authorize]
     [HttpPost("{username}/follow")]
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -29,6 +29,7 @@ public class FollowerController : ControllerBase
         return response.ToActionResult();
     }
 
+    [Authorize]
     [HttpDelete("{username}/unfollow")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]

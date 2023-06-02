@@ -5,7 +5,6 @@ using MiniTwit.Service;
 
 namespace MiniTwit.Server.Controllers;
 
-[Authorize]
 [ApiController]
 [Produces("application/json")]
 [Route("[controller]")]
@@ -41,6 +40,7 @@ public class UserController : ControllerBase
         return response.ToActionResult();
     }
 
+    [Authorize]
     [HttpPost("logout")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     public async Task<ActionResult> Logout()

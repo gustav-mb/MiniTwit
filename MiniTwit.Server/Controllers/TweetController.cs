@@ -5,7 +5,6 @@ using MiniTwit.Service;
 
 namespace MiniTwit.Server.Controllers;
 
-[Authorize]
 [ApiController]
 [Produces("application/json")]
 [Route("[controller]")]
@@ -20,6 +19,7 @@ public class TweetController : ControllerBase
         _logger = logger;
     }
 
+    [Authorize]
     [HttpGet]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -48,6 +48,7 @@ public class TweetController : ControllerBase
         return response.ToActionResult();
     }
 
+    [Authorize]
     [HttpPost("add_message")]
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
