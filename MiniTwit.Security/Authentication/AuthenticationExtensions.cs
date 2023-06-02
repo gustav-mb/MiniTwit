@@ -1,19 +1,21 @@
 using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
+using MiniTwit.Security.TokenGeneration;
 
 namespace MiniTwit.Security.Authentication;
 
 public static class AuthenticationExtensions
 {
-    public static IServiceCollection AddJwtAuthentication(this IServiceCollection services, IConfiguration configuration)
+    public static IServiceCollection AddJwtAuthentication(this IServiceCollection services, Action<JwtSettings> jwtSettingsAction)
     {
-        var section = configuration.GetSection(nameof(JwtSettings));
+        // Set fields by invoking Action
+        var jwtSettings = new JwtSettings();
+        jwtSettingsAction(jwtSettings);
         
-        services.Configure<JwtSettings>(section);
-        var jwtSettings = section.Get<JwtSettings>()!;
+        services.Configure(jwtSettingsAction);
+        services.AddScoped<ITokenGenerator, JwtTokenGenerator>();
 
         services.AddAuthentication(options =>
         {
@@ -22,6 +24,9 @@ public static class AuthenticationExtensions
             options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
         }).AddJwtBearer(options =>
         {
+            options.RequireHttpsMetadata = true;
+            options.SaveToken = true;
+
             options.TokenValidationParameters = new TokenValidationParameters
             {
                 ValidIssuer = jwtSettings.Issuer,

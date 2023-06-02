@@ -24,7 +24,7 @@ builder.Services.AddScoped<ITweetRepository, TweetRepository>();
 builder.Services.AddScoped<IServiceManager, ServiceManager>();
 
 // Configure MongoDB
-var dbName = builder.Configuration.GetSection("MiniTwitDatabaseName").Value!;
+var dbName = builder.Configuration.GetDatabaseName()!;
 builder.Services.AddMongoContext<IMiniTwitContext, MiniTwitContext>(options =>
 {
     options.ConnectionString = builder.Configuration.GetConnectionString(dbName)!;
@@ -41,7 +41,13 @@ builder.Services.AddControllers();
 builder.Services.AddSwagger();
 
 // JWT Authentication
-builder.Services.AddJwtAuthentication(builder.Configuration);
+var jwtSettings = builder.Configuration.GetSection(nameof(JwtSettings)).Get<JwtSettings>()!;
+builder.Services.AddJwtAuthentication(options => 
+{
+    options.Issuer = jwtSettings.Issuer;
+    options.Audience = jwtSettings.Audience;
+    options.Key = builder.Configuration.GetJwtKey()!;
+});
 
 builder.Services.AddAuthorization();
 
