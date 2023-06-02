@@ -40,7 +40,7 @@ public class TweetController : ControllerBase
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<ActionResult<IEnumerable<TweetDTO>>> UserTimeline(string username, [FromQuery] int? limit = null, CancellationToken ct = default)
     {
-        var response = await _serviceManager.TweetService.GetUsersTweetsAsync(username, null, ct);
+        var response = await _serviceManager.TweetService.GetUsersTweetsAsync(username, limit, ct);
         return response.ToActionResult();
     }
 
