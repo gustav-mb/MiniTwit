@@ -51,8 +51,10 @@ public class Argon2Hasher : IHasher
     private byte[] CreateSalt()
     {
         var buffer = new byte[_settings.SaltLength];
-        var rng = RandomNumberGenerator.Create();
-        rng.GetBytes(buffer);
+        using (var rng = RandomNumberGenerator.Create())
+        {
+            rng.GetBytes(buffer);
+        }
 
         return buffer;
     }
