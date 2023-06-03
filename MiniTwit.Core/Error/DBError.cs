@@ -13,7 +13,8 @@ public enum DBError
     USERNAME_TAKEN,
     USERNAME_MISSING,
     EMAIL_MISSING_OR_INVALID,
-    PASSWORD_MISSING
+    PASSWORD_MISSING,
+    NO_TOKEN
 }
 
 public static class DBErrorExtensions
@@ -29,6 +30,7 @@ public static class DBErrorExtensions
         USERNAME_MISSING => "Username is missing",
         EMAIL_MISSING_OR_INVALID => "Email is missing or invalid",
         PASSWORD_MISSING => "Password is missing",
+        NO_TOKEN => "No token found",
         _ => "Unknown error!"
     };
 
