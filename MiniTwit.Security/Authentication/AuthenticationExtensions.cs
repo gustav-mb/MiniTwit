@@ -34,8 +34,9 @@ public static class AuthenticationExtensions
                 IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings.Key)),
                 ValidateIssuer = true,
                 ValidateAudience = true,
-                ValidateLifetime = false,
-                ValidateIssuerSigningKey = true
+                ValidateLifetime = true,
+                ValidateIssuerSigningKey = true,
+                ClockSkew = TimeSpan.Zero
             };
         });
 
