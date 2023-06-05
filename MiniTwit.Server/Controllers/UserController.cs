@@ -20,16 +20,6 @@ public class UserController : ControllerBase
     }
 
     [AllowAnonymous]
-    [HttpPost("login")]
-    [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-    public async Task<ActionResult<UserDTO>> Login([FromBody] LoginDTO loginDTO)
-    {
-        var response = await _serviceManager.UserService.AuthenticateAsync(loginDTO);
-        return response.ToActionResult();
-    }
-
-    [AllowAnonymous]
     [HttpPost("register")]
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
