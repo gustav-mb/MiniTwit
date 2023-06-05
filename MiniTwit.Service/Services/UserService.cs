@@ -19,35 +19,6 @@ public class UserService : IUserService
         _hasher = hasher;
     }
 
-    public async Task<APIResponse<UserDTO>> AuthenticateAsync(LoginDTO loginDTO)
-    {
-        if (string.IsNullOrEmpty(loginDTO.Username))
-        {
-            return new APIResponse<UserDTO>(Unauthorized, null, USERNAME_MISSING);
-        }
-        
-        var dbResult = await _repository.GetByUsernameAsync(loginDTO.Username);
-
-        if (dbResult.DBError != null)
-        {
-            return new APIResponse<UserDTO>(Unauthorized, null, dbResult.DBError);
-        }
-
-        if (string.IsNullOrEmpty(loginDTO.Password))
-        {
-            return new APIResponse<UserDTO>(Unauthorized, null, PASSWORD_MISSING);
-        }
-
-        var validPassword = await _hasher.VerifyHashAsync(loginDTO.Password, dbResult.Model!.Password, dbResult.Model.Salt);
-
-        if (!validPassword)
-        {
-            return new APIResponse<UserDTO>(Unauthorized, null, INVALID_PASSWORD);
-        }
-
-        return new APIResponse<UserDTO>(Ok, dbResult.ConvertModelTo<UserDTO>());
-    }
-
     // TODO: NOT USED; ONLY TESTED
     public async Task<APIResponse<UserDTO>> GetUserByUsernameAsync(string username, CancellationToken ct = default)
     {
