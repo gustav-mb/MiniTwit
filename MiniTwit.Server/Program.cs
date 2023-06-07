@@ -21,6 +21,7 @@ builder.Services.Configure<ApiBehaviorOptions>(options => options.SuppressModelS
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IFollowerRepository, FollowerRepository>();
 builder.Services.AddScoped<ITweetRepository, TweetRepository>();
+builder.Services.AddScoped<ITokenRepository, TokenRepository>();
 builder.Services.AddScoped<IServiceManager, ServiceManager>();
 
 // Configure MongoDB
@@ -47,6 +48,8 @@ builder.Services.AddJwtAuthentication(options =>
     options.Issuer = jwtSettings.Issuer;
     options.Audience = jwtSettings.Audience;
     options.Key = builder.Configuration.GetJwtKey()!;
+    options.TokenExpiryMin = jwtSettings.TokenExpiryMin;
+    options.RefreshTokenExpiryMin = jwtSettings.RefreshTokenExpiryMin;
 });
 
 builder.Services.AddAuthorization();

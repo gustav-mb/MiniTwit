@@ -2,11 +2,11 @@ using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
-using MiniTwit.Security.TokenGeneration;
+using MiniTwit.Security.Authentication.TokenGenerators;
 
 namespace MiniTwit.Security.Authentication;
 
-public static class AuthenticationExtensions
+public static class IServiceCollectionExtensions
 {
     public static IServiceCollection AddJwtAuthentication(this IServiceCollection services, Action<JwtSettings> jwtSettingsAction)
     {
@@ -36,6 +36,7 @@ public static class AuthenticationExtensions
                 ValidateAudience = true,
                 ValidateLifetime = true,
                 ValidateIssuerSigningKey = true,
+                RequireExpirationTime = true,
                 ClockSkew = TimeSpan.Zero
             };
         });
