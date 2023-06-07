@@ -88,7 +88,6 @@ public class FollowerRepositoryTests : RepositoryTests
         Assert.Equal("000000000000000000000004", actualFollower.WhomId);
     }
 
-    // -----------
     [Fact]
     public async Task DeleteAsync_given_invalid_sourceId_returns_InvalidUserId()
     {
