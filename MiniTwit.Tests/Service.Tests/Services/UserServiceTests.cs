@@ -12,8 +12,8 @@ namespace MiniTwit.Tests.Service.Tests.Services;
 
 public class UserServiceTests
 {
-    private Mock<IHasher> _hasher;
-    private CancellationToken _ct;
+    private readonly Mock<IHasher> _hasher;
+    private readonly CancellationToken _ct;
     
     public UserServiceTests()
     {
