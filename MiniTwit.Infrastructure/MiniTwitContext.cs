@@ -11,6 +11,7 @@ public class MiniTwitContext : MongoContext, IMiniTwitContext
     public IMongoCollection<User> Users { get; set; } = null!;
     public IMongoCollection<Follower> Followers { get; set; } = null!;
     public IMongoCollection<Tweet> Tweets { get; set; } = null!;
+    public IMongoCollection<RefreshToken> RefreshTokens { get; set; } = null!;
 
     public MiniTwitContext(IMongoContextOptionsBuilder optionsBuilder) : base(optionsBuilder) { }
 
@@ -19,6 +20,10 @@ public class MiniTwitContext : MongoContext, IMiniTwitContext
         builder.Entity<Tweet>(e => 
         {
             e.ToCollection("Messages");
+        });
+        builder.Entity<RefreshToken>(e =>
+        {
+            e.ToCollection("Tokens");
         });
     }
 }
