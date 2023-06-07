@@ -87,14 +87,7 @@ public class JwtTokenGenerator : ITokenGenerator
 
         try
         {
-            var principal = tokenHandler.ValidateToken(token, parameters, out SecurityToken securityToken);
-            JwtSecurityToken? jwtToken = securityToken as JwtSecurityToken;
-
-            if (jwtToken == null || !jwtToken.Header.Alg.Equals(SecurityAlgorithms.HmacSha512, StringComparison.InvariantCultureIgnoreCase))
-            {
-                return null;
-            }
-
+            var principal = tokenHandler.ValidateToken(token, parameters, out SecurityToken _);
             string? value = principal.FindFirstValue(claimType);
 
             if (string.IsNullOrEmpty(value))
