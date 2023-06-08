@@ -102,7 +102,7 @@ public class AuthenticationService : IAuthenticationService
         // Refresh token has been used
         if (refreshTokenResult.Model.Used)
         {
-            return new APIResponse<TokenDTO>(Unauthorized, null, INVALID_TOKEN);
+            return new APIResponse<TokenDTO>(Unauthorized, null, TOKEN_USED);
         }
 
         var jwtId = _tokenGenerator.GetClaimFromAccessToken(JwtRegisteredClaimNames.Jti, tokenDTO.AccessToken);

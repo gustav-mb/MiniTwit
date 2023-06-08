@@ -18,6 +18,7 @@ public enum DBError
     TOKEN_EXPIRED,
     TOKEN_NOT_EXPIRED,
     TOKEN_INVALIDATED,
+    TOKEN_USED,
     NO_TOKEN
 }
 
@@ -38,7 +39,8 @@ public static class DBErrorExtensions
         NO_TOKEN => "No token found",
         TOKEN_EXPIRED => "Token expired",
         TOKEN_NOT_EXPIRED => "Token has not expired yet",
-        TOKEN_INVALIDATED => "Token has been invalided",
+        TOKEN_INVALIDATED => "Token has been invalidated",
+        TOKEN_USED => "Token has already been used",
         _ => "Unknown error!"
     };
 

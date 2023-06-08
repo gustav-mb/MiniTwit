@@ -4,12 +4,12 @@ using MiniTwit.Core.Responses;
 using MiniTwit.Security.Authentication.TokenGenerators;
 using MiniTwit.Security.Hashing;
 using MiniTwit.Core.IRepositories;
-using static MiniTwit.Core.Error.DBError;
-using static MiniTwit.Core.Responses.HTTPResponse;
 using MiniTwit.Service.Services;
 using MiniTwit.Core.Entities;
 using System.Security.Claims;
 using System.IdentityModel.Tokens.Jwt;
+using static MiniTwit.Core.Error.DBError;
+using static MiniTwit.Core.Responses.HTTPResponse;
 
 namespace MiniTwit.Tests.Service.Tests.Services;
 
@@ -241,10 +241,10 @@ public class AuthenticationServiceTests
     }
 
     [Fact]
-    public async Task RefreshTokenAsync_given_used_refresh_token_returns_Unauthorized_with_InvalidToken()
+    public async Task RefreshTokenAsync_given_used_refresh_token_returns_Unauthorized_with_TokenUsed()
     {
         // Arrange
-        var expected = new APIResponse<TokenDTO>(Unauthorized, null, INVALID_TOKEN);
+        var expected = new APIResponse<TokenDTO>(Unauthorized, null, TOKEN_USED);
         var expirationTime = DateTime.UtcNow.AddMinutes(60);
 
         var userRepository = new Mock<IUserRepository>();
