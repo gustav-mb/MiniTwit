@@ -113,7 +113,7 @@ public class AuthenticationService : IAuthenticationService
             return new APIResponse<TokenDTO>(Unauthorized, null, INVALID_TOKEN);
         }
 
-        // Fetch owner of refresh token
+        // Fetch owner of access token
         var userResult = await _userRepository.GetByUserIdAsync(userId);
 
         // Invalid userId
