@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MiniTwit.Core.DTOs;
 using MiniTwit.Service;
@@ -18,6 +19,7 @@ public class TweetController : ControllerBase
         _logger = logger;
     }
 
+    [Authorize]
     [HttpGet]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -27,6 +29,7 @@ public class TweetController : ControllerBase
         return response.ToActionResult();
     }
 
+    [AllowAnonymous]
     [HttpGet("public")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     public async Task<ActionResult<IEnumerable<TweetDTO>>> PublicTimeline([FromQuery] int? limit = null, CancellationToken ct = default)
@@ -35,6 +38,7 @@ public class TweetController : ControllerBase
         return response.ToActionResult();
     }
 
+    [AllowAnonymous]
     [HttpGet("{username}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -44,6 +48,7 @@ public class TweetController : ControllerBase
         return response.ToActionResult();
     }
 
+    [Authorize]
     [HttpPost("add_message")]
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]

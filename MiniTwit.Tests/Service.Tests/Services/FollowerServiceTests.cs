@@ -1,9 +1,9 @@
 using Moq;
 using MiniTwit.Core.Responses;
 using MiniTwit.Service.Services;
+using MiniTwit.Core.IRepositories;
 using static MiniTwit.Core.Responses.HTTPResponse;
 using static MiniTwit.Core.Error.DBError;
-using MiniTwit.Core.IRepositories;
 
 namespace MiniTwit.Tests.Service.Tests.Services;
 

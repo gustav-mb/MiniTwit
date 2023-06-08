@@ -8,4 +8,5 @@ public interface IMiniTwitContext
     IMongoCollection<User> Users { get; }
     IMongoCollection<Follower> Followers { get; }
     IMongoCollection<Tweet> Tweets { get; }
+    IMongoCollection<RefreshToken> RefreshTokens { get; }
 }

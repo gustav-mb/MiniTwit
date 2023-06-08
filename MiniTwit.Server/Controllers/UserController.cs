@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MiniTwit.Core.DTOs;
 using MiniTwit.Service;
@@ -18,15 +19,7 @@ public class UserController : ControllerBase
         _logger = logger;
     }
 
-    [HttpPost("login")]
-    [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-    public async Task<ActionResult<UserDTO>> Login([FromBody] LoginDTO loginDTO)
-    {
-        var response = await _serviceManager.UserService.AuthenticateAsync(loginDTO);
-        return response.ToActionResult();
-    }
-
+    [AllowAnonymous]
     [HttpPost("register")]
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -37,6 +30,7 @@ public class UserController : ControllerBase
         return response.ToActionResult();
     }
 
+    [Authorize]
     [HttpPost("logout")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     public async Task<ActionResult> Logout()

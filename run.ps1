@@ -8,9 +8,11 @@ function Setup-Secrets {
 
     $db_password = Get-Content .\.local\db_password.txt
     $connection_string = "mongodb://minitwit:$db_password@localhost:27018"
+    $jwt_key = Get-Content .\.local\jwt_key.txt
 
     dotnet user-secrets init --project MiniTwit.Server
     dotnet user-secrets set "ConnectionStrings:MiniTwit" $connection_string --project MiniTwit.Server
+    dotnet user-secrets set "JwtSettings:Key" $jwt_key --project MiniTwit.Server
 
     Println "Done." Green
 }

@@ -7,13 +7,13 @@ namespace MiniTwit.Core.MongoDB.DependencyInjection;
 
 public static class MongoContextExtensions
 {
-    public static void AddMongoContext<TContextImplementation>(this IServiceCollection services, Action<MongoDatabaseOptions> databaseSettings) where TContextImplementation : MongoContext
+    public static void AddMongoContext<TContextInterface, TContextImplementation>(this IServiceCollection services, Action<MongoDatabaseOptions> databaseSettings) where TContextImplementation : MongoContext, TContextInterface where TContextInterface : class
     {
         // Configure MongoDatabaseSettings
         services.Configure(databaseSettings);
 
         // Add IMongoDatabase singleton service
-        services.AddSingleton(provider =>
+        services.AddSingleton<IMongoDatabase>(provider =>
         {
             var options = provider.GetRequiredService<IOptions<MongoDatabaseOptions>>();
             var client = new MongoClient(options.Value.ConnectionString);
@@ -29,6 +29,6 @@ public static class MongoContextExtensions
         });
 
         // Add MongoContext implementation as service
-        services.AddScoped<TContextImplementation>();
+        services.AddScoped<TContextInterface, TContextImplementation>();
     }
 }

@@ -29,6 +29,7 @@ services:
       ASPNETCORE_ENVIRONMENT: Development
       ASPNETCORE_URLS: http://+:5000
       ConnectionStrings__MiniTwit:
+      JwtSettings__Key:
     ports:
       - '5000:5000'
     networks:
@@ -38,6 +39,8 @@ services:
     secrets:
       - source: connection_string
         target: ConnectionStrings__MiniTwit
+      - source: jwt_key
+        target: JwtSettings__Key
 
 volumes:
   minitwit-db_data:
@@ -47,4 +50,6 @@ secrets:
     file: '.local/db_password.txt'
   connection_string:
     file: '.local/connection_string.txt'
+  jwt_key:
+    file: '.local/jwt_key.txt'
     

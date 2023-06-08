@@ -7,4 +7,5 @@ public interface IServiceManager
     IUserService UserService { get; }
     IFollowerService FollowerService { get; }
     ITweetService TweetService { get; }
+    IAuthenticationService AuthenticationService { get; }
 }

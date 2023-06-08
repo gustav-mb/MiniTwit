@@ -189,6 +189,29 @@ public class RepositoryTests : IDisposable
         };
 
         Context.Followers.InsertMany(new[] { f1, f2, f3, f4 });
+
+        // Refresh Tokens
+        var rt1 = new RefreshToken
+        {
+            JwtId = "3a096f60-2ab0-4ecb-9627-1f02a22cccbd",
+            Token = "00000000000000000000000000000001",
+            UserId = "000000000000000000000001",
+            ExpiryTime = DateTime.Parse("01/01/2023 12:00:00").ToUniversalTime(),
+            Used = false,
+            Invalidated = false
+        };
+
+        var rt2 = new RefreshToken
+        {
+            JwtId = "3fc85c49-6dce-4e66-abad-e3b7c1aea29e",
+            Token = "00000000000000000000000000000002",
+            UserId = "000000000000000000000001",
+            ExpiryTime = DateTime.UtcNow.AddYears(1),
+            Used = false,
+            Invalidated = false
+        };
+
+        Context.RefreshTokens.InsertMany(new[] { rt1, rt2 });
     }
 
     [Fact]

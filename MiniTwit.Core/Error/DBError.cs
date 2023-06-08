@@ -13,7 +13,13 @@ public enum DBError
     USERNAME_TAKEN,
     USERNAME_MISSING,
     EMAIL_MISSING_OR_INVALID,
-    PASSWORD_MISSING
+    PASSWORD_MISSING,
+    INVALID_TOKEN,
+    TOKEN_EXPIRED,
+    TOKEN_NOT_EXPIRED,
+    TOKEN_INVALIDATED,
+    TOKEN_USED,
+    NO_TOKEN
 }
 
 public static class DBErrorExtensions
@@ -29,6 +35,12 @@ public static class DBErrorExtensions
         USERNAME_MISSING => "Username is missing",
         EMAIL_MISSING_OR_INVALID => "Email is missing or invalid",
         PASSWORD_MISSING => "Password is missing",
+        INVALID_TOKEN => "Invalid token",
+        NO_TOKEN => "No token found",
+        TOKEN_EXPIRED => "Token expired",
+        TOKEN_NOT_EXPIRED => "Token has not expired yet",
+        TOKEN_INVALIDATED => "Token has been invalidated",
+        TOKEN_USED => "Token has already been used",
         _ => "Unknown error!"
     };
 

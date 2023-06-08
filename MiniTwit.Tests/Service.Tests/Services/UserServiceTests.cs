@@ -12,99 +12,13 @@ namespace MiniTwit.Tests.Service.Tests.Services;
 
 public class UserServiceTests
 {
-    private Mock<IHasher> _hasher;
-    private CancellationToken _ct;
+    private readonly Mock<IHasher> _hasher;
+    private readonly CancellationToken _ct;
     
     public UserServiceTests()
     {
         _hasher = new Mock<IHasher>();
         _ct = new CancellationToken();
-    }
-
-    [Fact]
-    public async Task AuthenticateAsync_given_invalid_username_returns_Unauthorized_with_InvalidUsername()
-    {
-        // Arrange
-        var expected = new APIResponse<UserDTO>(Unauthorized, null, INVALID_USERNAME);
-
-        var repository = new Mock<IUserRepository>();
-        repository.Setup(r => r.GetByUsernameAsync("Test", _ct)).ReturnsAsync(new DBResult<User>{ Model = null, DBError = INVALID_USERNAME });
-        var service = new UserService(repository.Object, _hasher.Object);
-
-        // Act
-        var actual = await service.AuthenticateAsync(new LoginDTO { Username = "Test", Password = "password" });
-        
-        // Assert
-        Assert.Equal(expected, actual);
-    }
-
-    [Fact]
-    public async Task AuthenticateAsync_given_empty_username_returns_Unauthorized_with_UsernameMissing()
-    {
-        // Arrange
-        var expected = new APIResponse<UserDTO>(Unauthorized, null, USERNAME_MISSING);
-
-        var repository = new Mock<IUserRepository>();
-        var service = new UserService(repository.Object, _hasher.Object);
-
-        // Act
-        var actual = await service.AuthenticateAsync(new LoginDTO { Username = "", Password = "password" });
-        
-        // Assert
-        Assert.Equal(expected, actual);
-    }
-
-    [Fact]
-    public async Task AuthenticateAsync_given_empty_password_returns_Unauthorized_with_Password_Missing()
-    {
-        // Arrange
-        var expected = new APIResponse<UserDTO>(Unauthorized, null, PASSWORD_MISSING);
-
-        var repository = new Mock<IUserRepository>();
-        repository.Setup(r => r.GetByUsernameAsync("Gustav", _ct)).ReturnsAsync(new DBResult<User>{ Model = new User { Id = "000000000000000000000001", Username = "Gustav", Email = "test@test.com", Password = "password", Salt = "salt" }, DBError = null });
-        var service = new UserService(repository.Object, _hasher.Object);
-
-        // Act
-        var actual = await service.AuthenticateAsync(new LoginDTO { Username = "Gustav", Password = "" });
-        
-        // Assert
-        Assert.Equal(expected, actual);
-    }
-
-    [Fact]
-    public async Task AuthenticateAsync_given_wrong_password_returns_Unauthorized_with_InvalidPassword()
-    {
-        // Arrange
-        var expected = new APIResponse<UserDTO>(Unauthorized, null, INVALID_PASSWORD);
-
-        var repository = new Mock<IUserRepository>();
-        repository.Setup(r => r.GetByUsernameAsync("Gustav", _ct)).ReturnsAsync(new DBResult<User>{ Model = new User { Id = "000000000000000000000001", Username = "Gustav", Email = "test@test.com", Password = "password", Salt = "salt" }, DBError = null });
-        _hasher.Setup(h => h.VerifyHashAsync("wrong", "password", "salt")).ReturnsAsync(false);
-        var service = new UserService(repository.Object, _hasher.Object);
-
-        // Act
-        var actual = await service.AuthenticateAsync(new LoginDTO { Username = "Gustav", Password = "wrong" });
-        
-        // Assert
-        Assert.Equal(expected, actual);
-    }
-
-    [Fact]
-    public async Task AuthenticateAsync_given_correct_credentials_returns_Ok_and_User()
-    {
-        // Arrange
-        var expected = new APIResponse<UserDTO>(Ok, new UserDTO{ Id = "000000000000000000000001", Username = "Gustav", Email = "test@test.com" }, null);
-
-        var repository = new Mock<IUserRepository>();
-        repository.Setup(r => r.GetByUsernameAsync("Gustav", _ct)).ReturnsAsync(new DBResult<User>{ Model = new User { Id = "000000000000000000000001", Username = "Gustav", Email = "test@test.com", Password = "password", Salt = "salt" }, DBError = null });
-        _hasher.Setup(h => h.VerifyHashAsync("password", "password", "salt")).ReturnsAsync(true);
-        var service = new UserService(repository.Object, _hasher.Object);
-
-        // Act
-        var actual = await service.AuthenticateAsync(new LoginDTO { Username = "Gustav", Password = "password" });
-        
-        // Assert
-        Assert.Equal(expected, actual);
     }
 
     [Fact]

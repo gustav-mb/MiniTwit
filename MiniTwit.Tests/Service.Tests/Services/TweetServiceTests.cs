@@ -11,7 +11,7 @@ namespace MiniTwit.Tests.Service.Tests.Services;
 
 public class TweetServiceTests
 {
-    private CancellationToken _ct;
+    private readonly CancellationToken _ct;
 
     public TweetServiceTests()
     {

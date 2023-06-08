@@ -62,4 +62,25 @@ public class UserRepository : IUserRepository
             Model = user
         };
     }
+
+    public async Task<DBResult<User>> GetByUserIdAsync(string userId, CancellationToken ct = default)
+    {
+        var user = await _context.Users.Find(user => user.Id == userId).FirstOrDefaultAsync();
+
+        // User does not exist
+        if (user == null)
+        {
+            return new DBResult<User>
+            {
+                DBError = INVALID_USER_ID,
+                Model = null
+            };
+        }
+
+        return new DBResult<User>
+        {
+            DBError = null,
+            Model = user
+        };
+    }
 }

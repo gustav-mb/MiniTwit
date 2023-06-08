@@ -179,7 +179,8 @@ public class TweetTests : IClassFixture<CustomWebApplicationFactory>
         Assert.Equal(expected, content);
     }
 
-    [Fact, Priority(1)]
+    [Fact]
+    [Priority(1)]
     public async Task AddMessage_given_valid_AuthorId_returns_Created()
     {
         // Act

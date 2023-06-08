@@ -6,12 +6,12 @@ namespace MiniTwit.Tests.Security.Tests.Hashing;
 
 public class Argon2HasherTests
 {
-    private readonly HashSettings _settings;
+    private readonly Argon2HashSettings _settings;
     private readonly Argon2Hasher _hasher;
     
     public Argon2HasherTests()
     {
-        _settings = new HashSettings
+        _settings = new Argon2HashSettings
         {
             DegreeOfParallelism = 8,
             Iterations = 4,
@@ -20,7 +20,7 @@ public class Argon2HasherTests
             SaltLength = 16
         };
 
-        _hasher = new Argon2Hasher(Options.Create<HashSettings>(_settings));
+        _hasher = new Argon2Hasher(Options.Create<Argon2HashSettings>(_settings));
     }
 
     private byte[] CreateSalt()

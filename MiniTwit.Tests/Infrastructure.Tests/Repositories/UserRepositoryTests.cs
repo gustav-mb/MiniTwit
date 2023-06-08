@@ -91,4 +91,40 @@ public class UserRepositoryTests : RepositoryTests
         Assert.Null(actual.DBError);
         actual.Model.Should().BeEquivalentTo(user);
     }
+
+    [Fact]
+    public async Task GetByUserIdAsync_given_invalid_userId_returns_InvalidId()
+    {
+        // Arrange
+        var expected = new DBResult<User>
+        {
+            DBError = INVALID_USER_ID,
+            Model = null
+        };
+
+        // Act
+        var actual = await _repository.GetByUserIdAsync("000000000000000000000000");
+
+        // Assert
+        Assert.Equal(expected, actual);
+    }
+
+    [Fact]
+    public async Task GetByUserIdAsync_given_valid_userId_returns_user()
+    {
+        // Arrange
+        var user = new User { Id = "000000000000000000000001", Username = "Gustav", Email = "test@test.com", Password = "password", Salt = "salt" };
+        var expected = new DBResult<User>
+        {
+            DBError = null,
+            Model = user
+        };
+
+        // Act
+        var actual = await _repository.GetByUserIdAsync("000000000000000000000001");
+
+        // Assert
+        Assert.Null(actual.DBError);
+        actual.Model.Should().BeEquivalentTo(user);
+    }
 }
