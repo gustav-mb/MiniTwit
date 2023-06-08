@@ -57,4 +57,3 @@ secrets:
     file: '.local/connection_string.txt'
   jwt_key:
     file: '.local/jwt_key.txt'
-    
