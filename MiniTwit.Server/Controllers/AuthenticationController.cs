@@ -25,8 +25,6 @@ public class AuthenticationController : ControllerBase
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     public async Task<ActionResult<TokenDTO>> Login([FromBody] LoginDTO loginDTO)
     {
-        _logger.LogInformation($"Received login request from {loginDTO.Username}");
-
         var response = await _serviceManager.AuthenticationService.AuthenticateAsync(loginDTO);
         return response.ToActionResult();
     }
@@ -37,8 +35,6 @@ public class AuthenticationController : ControllerBase
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     public async Task<ActionResult<TokenDTO>> RefreshToken(TokenDTO tokenDTO)
     {
-        _logger.LogInformation($"Received refresh token request for token {tokenDTO.AccessToken}");
-
         var response = await _serviceManager.AuthenticationService.RefreshTokenAsync(tokenDTO);
         return response.ToActionResult();
     }
