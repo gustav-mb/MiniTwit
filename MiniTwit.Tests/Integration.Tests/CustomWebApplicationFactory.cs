@@ -55,8 +55,8 @@ public class CustomWebApplicationFactory : WebApplicationFactory<Program>
             var provider = services.BuildServiceProvider();
             using var scope = provider.CreateScope();
             var appContext = scope.ServiceProvider.GetRequiredService<IMiniTwitContext>();
-            var hasher  = scope.ServiceProvider.GetRequiredService<IHasher>();
-            
+            var hasher = scope.ServiceProvider.GetRequiredService<IHasher>();
+
             Seed(appContext, hasher);
         });
 
@@ -97,7 +97,7 @@ public class CustomWebApplicationFactory : WebApplicationFactory<Program>
             Salt = hashResult.Salt
         };
 
-         var u4 = new User
+        var u4 = new User
         {
             Id = "000000000000000000000004",
             Username = "Victor",
