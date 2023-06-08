@@ -1,13 +1,14 @@
+using Microsoft.AspNetCore.Mvc;
 using MiniTwit.Core;
-using MiniTwit.Core.MongoDB.DependencyInjection;
 using MiniTwit.Core.IRepositories;
+using MiniTwit.Core.MongoDB.DependencyInjection;
 using MiniTwit.Infrastructure;
 using MiniTwit.Infrastructure.Repositories;
 using MiniTwit.Security.Hashing;
-using MiniTwit.Service;
-using MiniTwit.Server.Extensions;
 using MiniTwit.Security.Authentication;
-using Microsoft.AspNetCore.Mvc;
+using MiniTwit.Service;
+using MiniTwit.Service.Data;
+using MiniTwit.Server.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -67,6 +68,9 @@ if (app.Environment.IsDevelopment())
         config.RoutePrefix = string.Empty;
         config.DisplayRequestDuration();
     });
+
+    // Seed database
+    app.SeedDatabase();
 }
 
 app.UseHttpsRedirection();
