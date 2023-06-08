@@ -22,6 +22,8 @@ public static class Errors
     public const string TOKEN_INVALIDATED = "The token has been invalidated";
     public const string TOKEN_USED = "The token has aleady been used";
 
+    public const string FORBIDDEN_OPERATION = "You are not authorized to do that";
+
     public static APIError ToAPIError(HTTPResponse HTTPResponse, string error)
     {
         return new APIError
