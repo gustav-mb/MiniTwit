@@ -4,6 +4,7 @@ using Xunit.Priority;
 using FluentAssertions;
 using MiniTwit.Core.DTOs;
 using MiniTwit.Core.Error;
+using static MiniTwit.Core.Error.Errors;
 
 namespace MiniTwit.Tests.Integration.Tests.Integrations;
 
@@ -22,7 +23,7 @@ public class TweetTests : IClassFixture<CustomWebApplicationFactory>
     public async Task Timeline_given_invalid_userId_returns_NotFound()
     {
         // Arrange
-        var expected = new APIError { Status = 404, ErrorMsg = "Invalid user id" };
+        var expected = new APIError { Status = 404, ErrorMsg = INVALID_USER_ID };
 
         // Act
         var actual = await _factory.CreateClient().GetAsync("/Tweet/?userId=000000000000000000000000");
@@ -153,7 +154,7 @@ public class TweetTests : IClassFixture<CustomWebApplicationFactory>
     public async Task UserTimeline_with_null_limit_given_invalid_username_returns_NotFound()
     {
         // Arrange
-        var expected = new APIError { Status = 404, ErrorMsg = "Invalid username" };
+        var expected = new APIError { Status = 404, ErrorMsg = INVALID_USERNAME };
 
         // Act
         var actual = await _factory.CreateClient().GetAsync("/Tweet/Test");
@@ -168,7 +169,7 @@ public class TweetTests : IClassFixture<CustomWebApplicationFactory>
     public async Task AddMessage_given_invalid_AuthorId_returns_NotFound()
     {
         // Arrange
-        var expected = new APIError { Status = 404, ErrorMsg = "Invalid user id" };
+        var expected = new APIError { Status = 404, ErrorMsg = INVALID_USER_ID };
 
         // Act
         var actual = await _factory.CreateClient().PostAsJsonAsync("/Tweet/add_message", new TweetCreateDTO { AuthorId = "000000000000000000000000", Text = "New Tweet" });

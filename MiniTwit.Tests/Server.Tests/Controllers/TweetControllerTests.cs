@@ -6,7 +6,7 @@ using MiniTwit.Service;
 using MiniTwit.Core.Responses;
 using MiniTwit.Core.DTOs;
 using MiniTwit.Core.Error;
-using static MiniTwit.Core.Error.DBError;
+using static MiniTwit.Core.Error.Errors;
 using static MiniTwit.Core.Responses.HTTPResponse;
 
 namespace MiniTwit.Tests.Server.Tests.Controllers;
@@ -29,7 +29,7 @@ public class TweetControllerTests
         var expected = Enumerable.Empty<TweetDTO>();
 
         var serviceManager = new Mock<IServiceManager>();
-        serviceManager.Setup(sm => sm.TweetService.GetUsersAndFollowedNonFlaggedTweetsAsync("000000000000000000000001", null, _ct)).ReturnsAsync(new APIResponse<IEnumerable<TweetDTO>>(Ok, Enumerable.Empty<TweetDTO>(), null));
+        serviceManager.Setup(sm => sm.TweetService.GetUsersAndFollowedNonFlaggedTweetsAsync("000000000000000000000001", null, _ct)).ReturnsAsync(new APIResponse<IEnumerable<TweetDTO>>(Ok, Enumerable.Empty<TweetDTO>()));
         var controller = new TweetController(serviceManager.Object, _logger.Object);
 
         // Act
@@ -44,7 +44,7 @@ public class TweetControllerTests
     public async Task Timeline_given_invalid_userId_returns_NotFound()
     {
         // Arrange
-        var expected = new APIError { Status = 404, ErrorMsg = "Invalid user id" };
+        var expected = new APIError { Status = 404, ErrorMsg = INVALID_USER_ID };
 
         var serviceManager = new Mock<IServiceManager>();
         serviceManager.Setup(sm => sm.TweetService.GetUsersAndFollowedNonFlaggedTweetsAsync("000000000000000000000000", null, _ct)).ReturnsAsync(new APIResponse<IEnumerable<TweetDTO>>(NotFound, null, INVALID_USER_ID));
@@ -65,7 +65,7 @@ public class TweetControllerTests
         var expected = Enumerable.Empty<TweetDTO>();
 
         var serviceManager = new Mock<IServiceManager>();
-        serviceManager.Setup(sm => sm.TweetService.GetAllNonFlaggedTweetsAsync(null, _ct)).ReturnsAsync(new APIResponse<IEnumerable<TweetDTO>>(Ok, Enumerable.Empty<TweetDTO>(), null));
+        serviceManager.Setup(sm => sm.TweetService.GetAllNonFlaggedTweetsAsync(null, _ct)).ReturnsAsync(new APIResponse<IEnumerable<TweetDTO>>(Ok, Enumerable.Empty<TweetDTO>()));
         var controller = new TweetController(serviceManager.Object, _logger.Object);
 
         // Act
@@ -80,7 +80,7 @@ public class TweetControllerTests
     public async Task UserTimeline_given_invalid_username_returns_NotFound()
     {
         // Arrange
-        var expected = new APIError { Status = 404, ErrorMsg = "Invalid username" };
+        var expected = new APIError { Status = 404, ErrorMsg = INVALID_USERNAME };
 
         var serviceManager = new Mock<IServiceManager>();
         serviceManager.Setup(sm => sm.TweetService.GetUsersTweetsAsync("Test", null, _ct)).ReturnsAsync(new APIResponse<IEnumerable<TweetDTO>>(NotFound, null, INVALID_USERNAME));
@@ -101,7 +101,7 @@ public class TweetControllerTests
         var expected = Enumerable.Empty<TweetDTO>();
 
         var serviceManager = new Mock<IServiceManager>();
-        serviceManager.Setup(sm => sm.TweetService.GetUsersTweetsAsync("Gustav", null, _ct)).ReturnsAsync(new APIResponse<IEnumerable<TweetDTO>>(Ok, Enumerable.Empty<TweetDTO>(), null));
+        serviceManager.Setup(sm => sm.TweetService.GetUsersTweetsAsync("Gustav", null, _ct)).ReturnsAsync(new APIResponse<IEnumerable<TweetDTO>>(Ok, Enumerable.Empty<TweetDTO>()));
         var controller = new TweetController(serviceManager.Object, _logger.Object);
 
         // Act
@@ -116,7 +116,7 @@ public class TweetControllerTests
     public async Task AddMessage_given_invalid_AuthorId_returns_NotFound()
     {
         // Arrange
-        var expected = new APIError { Status = 404, ErrorMsg = "Invalid user id" };
+        var expected = new APIError { Status = 404, ErrorMsg = INVALID_USER_ID };
 
         var serviceManager = new Mock<IServiceManager>();
         serviceManager.Setup(sm => sm.TweetService.CreateTweetAsync(new TweetCreateDTO { AuthorId = "000000000000000000000000", Text = "text" })).ReturnsAsync(new APIResponse(NotFound, INVALID_USER_ID));
@@ -135,7 +135,7 @@ public class TweetControllerTests
     {
         // Arrange
         var serviceManager = new Mock<IServiceManager>();
-        serviceManager.Setup(sm => sm.TweetService.CreateTweetAsync(new TweetCreateDTO { AuthorId = "000000000000000000000001", Text = "text" })).ReturnsAsync(new APIResponse(Created, null));
+        serviceManager.Setup(sm => sm.TweetService.CreateTweetAsync(new TweetCreateDTO { AuthorId = "000000000000000000000001", Text = "text" })).ReturnsAsync(new APIResponse(Created));
         var controller = new TweetController(serviceManager.Object, _logger.Object);
 
         // Act

@@ -6,7 +6,7 @@ using MiniTwit.Server.Controllers;
 using MiniTwit.Service;
 using MiniTwit.Core.Error;
 using static MiniTwit.Core.Responses.HTTPResponse;
-using static MiniTwit.Core.Error.DBError;
+using static MiniTwit.Core.Error.Errors;
 
 namespace MiniTwit.Tests.Server.Tests.Controllers;
 
@@ -24,7 +24,7 @@ public class FollowerControllerTests
     {
         // Arrange
         var serviceManager = new Mock<IServiceManager>();
-        serviceManager.Setup(sm => sm.FollowerService.FollowUserAsync("000000000000000000000001", "Simon")).ReturnsAsync(new APIResponse(Created, null));
+        serviceManager.Setup(sm => sm.FollowerService.FollowUserAsync("000000000000000000000001", "Simon")).ReturnsAsync(new APIResponse(Created));
         var controller = new FollowerController(serviceManager.Object, _logger.Object);
 
         // Act
@@ -40,7 +40,7 @@ public class FollowerControllerTests
     public async Task FollowUser_given_invalid_username_returns_NotFound()
     {
         // Arrange
-        var expected = new APIError { Status = 404, ErrorMsg = "Invalid username" };
+        var expected = new APIError { Status = 404, ErrorMsg = INVALID_USERNAME };
 
         var serviceManager = new Mock<IServiceManager>();
         serviceManager.Setup(sm => sm.FollowerService.FollowUserAsync("000000000000000000000001", "Test")).ReturnsAsync(new APIResponse(NotFound, INVALID_USERNAME));
@@ -58,7 +58,7 @@ public class FollowerControllerTests
     public async Task FollowUser_given_invalid_userId_returns_NotFound()
     {
         // Arrange
-        var expected = new APIError { Status = 404, ErrorMsg = "Invalid user id" };
+        var expected = new APIError { Status = 404, ErrorMsg = INVALID_USER_ID };
 
         var serviceManager = new Mock<IServiceManager>();
         serviceManager.Setup(sm => sm.FollowerService.FollowUserAsync("000000000000000000000000", "Simon")).ReturnsAsync(new APIResponse(NotFound, INVALID_USER_ID));
@@ -76,7 +76,7 @@ public class FollowerControllerTests
     public async Task FollowUser_given_same_username_and_userId_returns_BadRequest()
     {
         // Arrange
-        var expected = new APIError { Status = 400, ErrorMsg = "Can't follow yourself" };
+        var expected = new APIError { Status = 400, ErrorMsg = FOLLOW_SELF };
 
         var serviceManager = new Mock<IServiceManager>();
         serviceManager.Setup(sm => sm.FollowerService.FollowUserAsync("000000000000000000000001", "Gustav")).ReturnsAsync(new APIResponse(BadRequest, FOLLOW_SELF));
@@ -95,7 +95,7 @@ public class FollowerControllerTests
     {
         // Arrange
         var serviceManager = new Mock<IServiceManager>();
-        serviceManager.Setup(sm => sm.FollowerService.UnfollowUserAsync("000000000000000000000001", "Simon")).ReturnsAsync(new APIResponse(Created, null));
+        serviceManager.Setup(sm => sm.FollowerService.UnfollowUserAsync("000000000000000000000001", "Simon")).ReturnsAsync(new APIResponse(Created));
         var controller = new FollowerController(serviceManager.Object, _logger.Object);
 
         // Act
@@ -111,7 +111,7 @@ public class FollowerControllerTests
     public async Task UnfollowUser_given_invalid_username_returns_NotFound()
     {
         // Arrange
-        var expected = new APIError { Status = 404, ErrorMsg = "Invalid username" };
+        var expected = new APIError { Status = 404, ErrorMsg = INVALID_USERNAME };
 
         var serviceManager = new Mock<IServiceManager>();
         serviceManager.Setup(sm => sm.FollowerService.UnfollowUserAsync("000000000000000000000001", "Test")).ReturnsAsync(new APIResponse(NotFound, INVALID_USERNAME));
@@ -129,7 +129,7 @@ public class FollowerControllerTests
     public async Task UnfollowUser_given_invalid_userId_returns_NotFound()
     {
         // Arrange
-        var expected = new APIError { Status = 404, ErrorMsg = "Invalid user id" };
+        var expected = new APIError { Status = 404, ErrorMsg = INVALID_USER_ID };
 
         var serviceManager = new Mock<IServiceManager>();
         serviceManager.Setup(sm => sm.FollowerService.UnfollowUserAsync("000000000000000000000000", "Simon")).ReturnsAsync(new APIResponse(NotFound, INVALID_USER_ID));
@@ -147,7 +147,7 @@ public class FollowerControllerTests
     public async Task UnfollowUser_given_same_username_and_userId_returns_BadRequest()
     {
         // Arrange
-        var expected = new APIError { Status = 400, ErrorMsg = "Can't unfollow yourself" };
+        var expected = new APIError { Status = 400, ErrorMsg = UNFOLLOW_SELF };
 
         var serviceManager = new Mock<IServiceManager>();
         serviceManager.Setup(sm => sm.FollowerService.UnfollowUserAsync("000000000000000000000001", "Gustav")).ReturnsAsync(new APIResponse(BadRequest, UNFOLLOW_SELF));

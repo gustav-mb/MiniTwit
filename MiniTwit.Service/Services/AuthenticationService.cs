@@ -7,7 +7,7 @@ using MiniTwit.Core.Responses;
 using MiniTwit.Security.Hashing;
 using MiniTwit.Security.Authentication.TokenGenerators;
 using MiniTwit.Service.IServices;
-using static MiniTwit.Core.Error.DBError;
+using static MiniTwit.Core.Error.Errors;
 using static MiniTwit.Core.Responses.HTTPResponse;
 
 namespace MiniTwit.Service.Services;
@@ -119,7 +119,7 @@ public class AuthenticationService : IAuthenticationService
         // Invalid userId
         if (userResult.Model == null)
         {
-            return new APIResponse<TokenDTO>(Unauthorized, null, userResult.DBError);
+            return new APIResponse<TokenDTO>(Unauthorized, null, userResult.DBError!);
         }
 
         // Update refresh token to "used"

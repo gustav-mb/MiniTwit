@@ -4,7 +4,7 @@ using MiniTwit.Core.Entities;
 using MiniTwit.Core.Responses;
 using MiniTwit.Infrastructure.Repositories;
 using MongoDB.Driver;
-using static MiniTwit.Core.Error.DBError;
+using static MiniTwit.Core.Error.Errors;
 
 namespace MiniTwit.Tests.Infrastructure.Tests.Repositories;
 
