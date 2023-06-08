@@ -1,5 +1,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using MiniTwit.Core.Error;
+using MiniTwit.Server.Extensions;
 using MiniTwit.Service;
 
 namespace MiniTwit.Server.Controllers;
@@ -25,6 +27,11 @@ public class FollowerController : ControllerBase
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<ActionResult> FollowUser(string username, [FromQuery] string userId)
     {
+        if (userId != HttpContext.GetUserId())
+        {
+            return new ForbiddenObjectResult(new APIError { Status = 403, ErrorMsg = Errors.FORBIDDEN_OPERATION });
+        }
+
         var response = await _serviceManager.FollowerService.FollowUserAsync(userId, username);
         return response.ToActionResult();
     }
@@ -36,6 +43,11 @@ public class FollowerController : ControllerBase
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<ActionResult> UnfollowUser(string username, [FromQuery] string userId)
     {
+        if (userId != HttpContext.GetUserId())
+        {
+            return new ForbiddenObjectResult(new APIError { Status = 403, ErrorMsg = Errors.FORBIDDEN_OPERATION });
+        }
+        
         var response = await _serviceManager.FollowerService.UnfollowUserAsync(userId, username);
         return response.ToActionResult();
     }

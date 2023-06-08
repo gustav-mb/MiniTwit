@@ -1,6 +1,8 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MiniTwit.Core.DTOs;
+using MiniTwit.Core.Error;
+using MiniTwit.Server.Extensions;
 using MiniTwit.Service;
 
 namespace MiniTwit.Server.Controllers;
@@ -54,6 +56,11 @@ public class TweetController : ControllerBase
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<ActionResult> AddMessage([FromBody] TweetCreateDTO tweetCreateDTO)
     {
+        if (tweetCreateDTO.AuthorId != HttpContext.GetUserId())
+        {
+            return new ForbiddenObjectResult(new APIError { Status = 403, ErrorMsg = Errors.FORBIDDEN_OPERATION });
+        }
+
         var response = await _serviceManager.TweetService.CreateTweetAsync(tweetCreateDTO);
         return response.ToActionResult();
     }
