@@ -264,27 +264,21 @@ public class AuthenticationTests : IClassFixture<CustomWebApplicationFactory>
         Assert.NotNull(content);
     }
 
-    private string CreateExpiredAccessToken(string jwtId, string userId, string username, string email)
+    private string CreateAccessToken(Claim[] claims, DateTime expires, DateTime notBefore)
     {
         var key = Encoding.UTF8.GetBytes(_factory.JwtSettings.Key);
         var signingCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha512Signature);
 
-        var subject = new ClaimsIdentity(new[]
-        {
-            new Claim(JwtRegisteredClaimNames.Jti, jwtId),
-            new Claim(ClaimTypes.NameIdentifier, userId),
-            new Claim(ClaimTypes.Name, username),
-            new Claim(ClaimTypes.Email, email),
-        });
+        var subject = new ClaimsIdentity(claims);
 
-        var tokenDescriptor = new SecurityTokenDescriptor
+         var tokenDescriptor = new SecurityTokenDescriptor
         {
             Subject = subject,
             Issuer = _factory.JwtSettings.Issuer,
             Audience = _factory.JwtSettings.Audience,
             SigningCredentials = signingCredentials,
-            Expires = DateTime.UtcNow.Subtract(TimeSpan.FromMinutes(5)),
-            NotBefore = DateTime.UtcNow.Subtract(TimeSpan.FromMinutes(6))
+            Expires = expires,
+            NotBefore = notBefore
         };
 
         var tokenHandler = new JwtSecurityTokenHandler();
@@ -293,31 +287,37 @@ public class AuthenticationTests : IClassFixture<CustomWebApplicationFactory>
         return tokenHandler.WriteToken(token);
     }
 
-    private string CreateAccessTokenWithoutNameIdentifier(string jwtId, string username, string email)
+    private string CreateExpiredAccessToken(string jwtId, string userId, string username, string email)
     {
         var key = Encoding.UTF8.GetBytes(_factory.JwtSettings.Key);
         var signingCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha512Signature);
 
-        var subject = new ClaimsIdentity(new[]
+        var claims = new[]
+        {
+            new Claim(JwtRegisteredClaimNames.Jti, jwtId),
+            new Claim(ClaimTypes.NameIdentifier, userId),
+            new Claim(ClaimTypes.Name, username),
+            new Claim(ClaimTypes.Email, email),
+        };
+
+        var expires = DateTime.UtcNow.Subtract(TimeSpan.FromMinutes(5));
+        var notBefore = DateTime.UtcNow.Subtract(TimeSpan.FromMinutes(6));
+
+        return CreateAccessToken(claims, expires, notBefore);
+    }
+
+    private string CreateAccessTokenWithoutNameIdentifier(string jwtId, string username, string email)
+    {
+        var claims = new[]
         {
             new Claim(JwtRegisteredClaimNames.Jti, jwtId),
             new Claim(ClaimTypes.Name, username),
             new Claim(ClaimTypes.Email, email),
-        });
-
-        var tokenDescriptor = new SecurityTokenDescriptor
-        {
-            Subject = subject,
-            Issuer = _factory.JwtSettings.Issuer,
-            Audience = _factory.JwtSettings.Audience,
-            SigningCredentials = signingCredentials,
-            Expires = DateTime.UtcNow.AddMinutes(_factory.JwtSettings.TokenExpiryMin),
-            NotBefore = DateTime.UtcNow,
         };
 
-        var tokenHandler = new JwtSecurityTokenHandler();
-        var token = tokenHandler.CreateToken(tokenDescriptor);
+        var expires = DateTime.UtcNow.AddMinutes(_factory.JwtSettings.TokenExpiryMin);
+        var notBefore = DateTime.UtcNow;
 
-        return tokenHandler.WriteToken(token);
+        return CreateAccessToken(claims, expires, notBefore);
     }
 }
