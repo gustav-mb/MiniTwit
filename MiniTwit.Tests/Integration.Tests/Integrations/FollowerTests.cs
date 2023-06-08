@@ -1,6 +1,7 @@
 using System.Net;
 using System.Net.Http.Json;
 using MiniTwit.Core.Error;
+using static MiniTwit.Core.Error.Errors;
 
 namespace MiniTwit.Tests.Integration.Tests.Integrations;
 
@@ -27,7 +28,7 @@ public class FollowerTests : IClassFixture<CustomWebApplicationFactory>
     public async Task FollowUser_given_invalid_userId_returns_NotFound()
     {
         // Arrange
-        var expected = new APIError { Status = 404, ErrorMsg = "Invalid user id" };
+        var expected = new APIError { Status = 404, ErrorMsg = INVALID_USER_ID };
 
         // Act
         var actual = await _factory.CreateClient().PostAsync("/Follower/Gustav/follow?userId=000000000000000000000000", null);
@@ -42,7 +43,7 @@ public class FollowerTests : IClassFixture<CustomWebApplicationFactory>
     public async Task FollowUser_given_invalid_username_returns_NotFound()
     {
         // Arrange
-        var expected = new APIError { Status = 404, ErrorMsg = "Invalid username" };
+        var expected = new APIError { Status = 404, ErrorMsg = INVALID_USERNAME };
 
         // Act
         var actual = await _factory.CreateClient().PostAsync("/Follower/Test/follow?userId=000000000000000000000004", null);
@@ -57,7 +58,7 @@ public class FollowerTests : IClassFixture<CustomWebApplicationFactory>
     public async Task FollowUser_given_same_userId_and_username_returns_BadRequest()
     {
         // Arrange
-        var expected = new APIError { Status = 400, ErrorMsg = "Can't follow yourself" };
+        var expected = new APIError { Status = 400, ErrorMsg = FOLLOW_SELF };
 
         // Act
         var actual = await _factory.CreateClient().PostAsync("/Follower/Gustav/follow?userId=000000000000000000000001", null);
@@ -82,7 +83,7 @@ public class FollowerTests : IClassFixture<CustomWebApplicationFactory>
     public async Task UnfollowUser_given_invalid_userId_returns_NotFound()
     {
         // Arrange
-        var expected = new APIError { Status = 404, ErrorMsg = "Invalid user id" };
+        var expected = new APIError { Status = 404, ErrorMsg = INVALID_USER_ID };
 
         // Act
         var actual = await _factory.CreateClient().DeleteAsync("/Follower/Gustav/unfollow?userId=000000000000000000000000");
@@ -97,7 +98,7 @@ public class FollowerTests : IClassFixture<CustomWebApplicationFactory>
     public async Task UnfollowUser_given_invalid_username_returns_NotFound()
     {
         // Arrange
-        var expected = new APIError { Status = 404, ErrorMsg = "Invalid username" };
+        var expected = new APIError { Status = 404, ErrorMsg = INVALID_USERNAME };
 
         // Act
         var actual = await _factory.CreateClient().DeleteAsync("/Follower/Test/unfollow?userId=000000000000000000000004");
@@ -112,7 +113,7 @@ public class FollowerTests : IClassFixture<CustomWebApplicationFactory>
     public async Task UnfollowUser_given_same_userId_and_username_returns_BadRequest()
     {
         // Arrange
-        var expected = new APIError { Status = 400, ErrorMsg = "Can't unfollow yourself" };
+        var expected = new APIError { Status = 400, ErrorMsg = UNFOLLOW_SELF };
 
         // Act
         var actual = await _factory.CreateClient().DeleteAsync("/Follower/Gustav/unfollow?userId=000000000000000000000001");

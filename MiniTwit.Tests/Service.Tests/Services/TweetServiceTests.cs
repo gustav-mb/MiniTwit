@@ -4,7 +4,7 @@ using MiniTwit.Core.IRepositories;
 using MiniTwit.Core.Responses;
 using MiniTwit.Service.Services;
 using MiniTwit.Core.Entities;
-using static MiniTwit.Core.Error.DBError;
+using static MiniTwit.Core.Error.Errors;
 using static MiniTwit.Core.Responses.HTTPResponse;
 
 namespace MiniTwit.Tests.Service.Tests.Services;
@@ -39,7 +39,7 @@ public class TweetServiceTests
     public async Task CreateTweetAsync_given_valid_authorId_returns_Created()
     {
         // Arrange
-        var expected = new APIResponse(Created, null);
+        var expected = new APIResponse(Created);
 
         var repository = new Mock<ITweetRepository>();
         repository.Setup(r => r.CreateAsync("000000000000000000000001", "text")).ReturnsAsync(new DBResult { DBError = null });
@@ -56,7 +56,7 @@ public class TweetServiceTests
     public async Task GetAllNonFlaggedTweetsAsync_returns_Ok_and_Tweets()
     {
         // Arrange
-        var expected = new APIResponse<IEnumerable<TweetDTO>>(Ok, Enumerable.Empty<TweetDTO>(), null);
+        var expected = new APIResponse<IEnumerable<TweetDTO>>(Ok, Enumerable.Empty<TweetDTO>());
 
         var repository = new Mock<ITweetRepository>();
         repository.Setup(r => r.GetAllNonFlaggedAsync(null, _ct)).ReturnsAsync(new DBResult<IEnumerable<Tweet>> { Model = Enumerable.Empty<Tweet>(), DBError = null });
@@ -90,7 +90,7 @@ public class TweetServiceTests
     public async Task GetUsersAndFollowedNonFlaggedTweetsAsync_given_valid_userId_returns_Ok_and_Tweets()
     {
         // Arrange
-        var expected = new APIResponse<IEnumerable<TweetDTO>>(Ok, Enumerable.Empty<TweetDTO>(), null);
+        var expected = new APIResponse<IEnumerable<TweetDTO>>(Ok, Enumerable.Empty<TweetDTO>());
 
         var repository = new Mock<ITweetRepository>();
         repository.Setup(r => r.GetAllNonFlaggedFollowedByUserIdAsync("000000000000000000000001", null, _ct)).ReturnsAsync(new DBResult<IEnumerable<Tweet>> { Model = Enumerable.Empty<Tweet>(), DBError = null });
@@ -124,7 +124,7 @@ public class TweetServiceTests
     public async Task GetUsersTweetsAsync_given_valid_username_returns_Ok_and_Tweets()
     {
         // Arrange
-        var expected = new APIResponse<IEnumerable<TweetDTO>>(Ok, Enumerable.Empty<TweetDTO>(), null);
+        var expected = new APIResponse<IEnumerable<TweetDTO>>(Ok, Enumerable.Empty<TweetDTO>());
 
         var repository = new Mock<ITweetRepository>();
         repository.Setup(r => r.GetAllByUsernameAsync("Gustav", null, _ct)).ReturnsAsync(new DBResult<IEnumerable<Tweet>> { Model = Enumerable.Empty<Tweet>(), DBError = null });

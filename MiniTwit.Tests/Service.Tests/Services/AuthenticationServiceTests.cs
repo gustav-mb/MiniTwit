@@ -8,7 +8,7 @@ using MiniTwit.Service.Services;
 using MiniTwit.Core.Entities;
 using System.Security.Claims;
 using System.IdentityModel.Tokens.Jwt;
-using static MiniTwit.Core.Error.DBError;
+using static MiniTwit.Core.Error.Errors;
 using static MiniTwit.Core.Responses.HTTPResponse;
 
 namespace MiniTwit.Tests.Service.Tests.Services;
@@ -108,7 +108,7 @@ public class AuthenticationServiceTests
     public async Task AuthenticateAsync_given_valid_Username_and_Password_returns_Ok_and_TokenDTO()
     {
         // Arrange
-        var expected = new APIResponse<TokenDTO>(Ok, new TokenDTO { AccessToken = "access", RefreshToken = "refresh" }, null);
+        var expected = new APIResponse<TokenDTO>(Ok, new TokenDTO { AccessToken = "access", RefreshToken = "refresh" });
         var exiryTime = DateTime.UtcNow;
 
         var userRepository = new Mock<IUserRepository>();
@@ -317,7 +317,7 @@ public class AuthenticationServiceTests
     public async Task RefreshTokenAsync_given_valid_access_and_refresh_token_returns_Ok_and_TokenDTO()
     {
         // Arrange
-        var expected = new APIResponse<TokenDTO>(Ok, new TokenDTO { AccessToken = "newAccess", RefreshToken = "newRefresh" }, null);
+        var expected = new APIResponse<TokenDTO>(Ok, new TokenDTO { AccessToken = "newAccess", RefreshToken = "newRefresh" });
         var expirationTime = DateTime.UtcNow.AddMinutes(60);
 
         var userRepository = new Mock<IUserRepository>();
