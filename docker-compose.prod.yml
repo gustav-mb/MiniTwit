@@ -1,0 +1,36 @@
+version: '3.8'
+
+networks:
+  main:
+    name: minitwit-networks
+
+services:
+  minitwit-db:
+    image: mongo:latest
+    command: [--auth]
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: minitwit
+      MONGO_INITDB_ROOT_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - minitwit-db_data:/data/db
+    ports:
+      - '27018:27017'
+    networks:
+      - main
+
+  minitwit-backend:
+    image: ${DOCKERHUB_USERNAME}/minitwit-backend:latest
+    environment:
+      ASPNETCORE_ENVIRONMENT: Production
+      ASPNETCORE_URLS: http://+:5000
+      ConnectionStrings__MiniTwit: ${DB_CONNECTION_STRING}
+      JwtSettings__Key: ${JWT_KEY}
+    ports:
+      - '5000:5000'
+    networks:
+      - main
+    depends_on:
+      - minitwit-db
+
+volumes:
+  minitwit-db_data:
