@@ -58,7 +58,7 @@ public class TweetController : ControllerBase
     {
         if (tweetCreateDTO.AuthorId != HttpContext.GetUserId())
         {
-            return new ForbiddenObjectResult(new APIError { Status = 403, ErrorMsg = Errors.FORBIDDEN_OPERATION });
+            return new ForbiddenObjectResult(new APIError { Status = StatusCodes.Status403Forbidden, ErrorMsg = Errors.FORBIDDEN_OPERATION });
         }
 
         var response = await _serviceManager.TweetService.CreateTweetAsync(tweetCreateDTO);
