@@ -9,13 +9,17 @@ public record APIResponse
     public HTTPResponse HTTPResponse { get; init; }
     public APIError? APIError { get; init; }
 
-    public APIResponse(HTTPResponse httpResponse, DBError? dbError)
+    public APIResponse(HTTPResponse httpResponse, string error)
     {
         HTTPResponse = httpResponse;
-        APIError = dbError.ToAPIError(httpResponse);
+        APIError = Errors.ToAPIError(httpResponse, error);
     }
 
-    public APIResponse(HTTPResponse httpResponse) : this(httpResponse, null) { }
+    public APIResponse(HTTPResponse httpResponse)
+    {
+        HTTPResponse = httpResponse;
+        APIError = null;
+    }
 
     public ActionResult ToActionResult() => CreateActionResult();
 
@@ -36,12 +40,15 @@ public record APIResponse<T> : APIResponse
 {
     public T? Model { get; init; }
 
-    public APIResponse(HTTPResponse httpResponse, T? model, DBError? dbError) : base(httpResponse, dbError)
+    public APIResponse(HTTPResponse httpResponse, T? model, string error) : base(httpResponse, error)
     {
         Model = model;
     }
 
-    public APIResponse(HTTPResponse httpResponse, T? model) : this(httpResponse, model, null) { }
+    public APIResponse(HTTPResponse httpResponse, T? model) : base(httpResponse)
+    {
+        Model = model;
+    }
 
     public ActionResult<T> ToActionResult(string location) => base.CreateActionResult(Model, location);
     public new ActionResult<T> ToActionResult() => base.CreateActionResult(Model);

@@ -3,7 +3,7 @@ using MiniTwit.Core.IRepositories;
 using MiniTwit.Core.Responses;
 using MiniTwit.Security.Hashing;
 using MiniTwit.Service.IServices;
-using static MiniTwit.Core.Error.DBError;
+using static MiniTwit.Core.Error.Errors;
 using static MiniTwit.Core.Responses.HTTPResponse;
 
 namespace MiniTwit.Service.Services;

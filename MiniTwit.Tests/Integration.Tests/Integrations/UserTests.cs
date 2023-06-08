@@ -2,6 +2,7 @@ using System.Net;
 using System.Net.Http.Json;
 using MiniTwit.Core.DTOs;
 using MiniTwit.Core.Error;
+using static MiniTwit.Core.Error.Errors;
 
 namespace MiniTwit.Tests.Integration.Tests.Integrations;
 
@@ -18,7 +19,7 @@ public class UserTests : IClassFixture<CustomWebApplicationFactory>
     public async Task Register_given_taken_username_returns_Conflict()
     {
         // Arrange
-        var expected = new APIError { Status = 409, ErrorMsg = "Username is already taken" };
+        var expected = new APIError { Status = 409, ErrorMsg = USERNAME_TAKEN };
 
         // Act
         var actual = await _factory.CreateClient().PostAsJsonAsync("/User/register", new UserCreateDTO { Username = "Gustav", Password = "password", Email = "test@test.com" });
@@ -35,7 +36,7 @@ public class UserTests : IClassFixture<CustomWebApplicationFactory>
     public async Task Register_given_null_or_empty_username_returns_BadRequest(string username)
     {
         // Arrange
-        var expected = new APIError { Status = 400, ErrorMsg = "Username is missing" };
+        var expected = new APIError { Status = 400, ErrorMsg = USERNAME_MISSING };
 
         // Act
         var actual = await _factory.CreateClient().PostAsJsonAsync("/User/register", new UserCreateDTO { Username = username, Password = "password", Email = "test@test.com" });
@@ -53,7 +54,7 @@ public class UserTests : IClassFixture<CustomWebApplicationFactory>
     public async Task Register_given_null_empty_or_malformed_email_returns_BadRequest(string email)
     {
         // Arrange
-        var expected = new APIError { Status = 400, ErrorMsg = "Email is missing or invalid" };
+        var expected = new APIError { Status = 400, ErrorMsg = EMAIL_MISSING_OR_INVALID };
 
         // Act
         var actual = await _factory.CreateClient().PostAsJsonAsync("/User/register", new UserCreateDTO { Username = "Test", Password = "password", Email = email });
@@ -70,7 +71,7 @@ public class UserTests : IClassFixture<CustomWebApplicationFactory>
     public async Task Register_given_null_or_empty_password_returns_BadRequest(string password)
     {
         // Arrange
-        var expected = new APIError { Status = 400, ErrorMsg = "Password is missing" };
+        var expected = new APIError { Status = 400, ErrorMsg = PASSWORD_MISSING };
 
         // Act
         var actual = await _factory.CreateClient().PostAsJsonAsync("/User/register", new UserCreateDTO { Username = "Test", Password = password, Email = "test@test.com" });

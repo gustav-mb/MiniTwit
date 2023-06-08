@@ -1,11 +1,10 @@
 using Mapster;
-using MiniTwit.Core.Error;
 
 namespace MiniTwit.Core.Responses;
 
 public record DBResult
 {
-    public DBError? DBError { get; init; }
+    public string? DBError { get; init; }
 }
 
 public record DBResult<T> : DBResult

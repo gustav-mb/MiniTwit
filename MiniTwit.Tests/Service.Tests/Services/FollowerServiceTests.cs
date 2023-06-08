@@ -3,7 +3,7 @@ using MiniTwit.Core.Responses;
 using MiniTwit.Service.Services;
 using MiniTwit.Core.IRepositories;
 using static MiniTwit.Core.Responses.HTTPResponse;
-using static MiniTwit.Core.Error.DBError;
+using static MiniTwit.Core.Error.Errors;
 
 namespace MiniTwit.Tests.Service.Tests.Services;
 
@@ -64,7 +64,7 @@ public class FollowerServiceTests
     public async Task FollowUserAsync_given_valid_userId_and_targetUsername_returns_Created()
     {
         // Arrange
-        var expected = new APIResponse(Created, null);
+        var expected = new APIResponse(Created);
 
         var repository = new Mock<IFollowerRepository>();
         repository.Setup(r => r.CreateAsync("000000000000000000000001", "Simon")).ReturnsAsync(new DBResult{ DBError = null });
@@ -132,7 +132,7 @@ public class FollowerServiceTests
     public async Task UnfollowUserAsync_given_valid_userId_and_targetUsername_returns_NoContent()
     {
         // Arrange
-        var expected = new APIResponse(NoContent, null);
+        var expected = new APIResponse(NoContent);
 
         var repository = new Mock<IFollowerRepository>();
         repository.Setup(r => r.DeleteAsync("000000000000000000000001", "Simon")).ReturnsAsync(new DBResult{ DBError = null });

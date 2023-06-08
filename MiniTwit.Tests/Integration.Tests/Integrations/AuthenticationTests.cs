@@ -3,13 +3,14 @@ using System.Net;
 using System.Net.Http.Json;
 using System.Security.Claims;
 using System.Text;
+using Xunit.Priority;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using MiniTwit.Core.DTOs;
 using MiniTwit.Core.Error;
 using MiniTwit.Security.Authentication;
 using MiniTwit.Security.Authentication.TokenGenerators;
-using Xunit.Priority;
+using static MiniTwit.Core.Error.Errors;
 
 namespace MiniTwit.Tests.Integration.Tests.Integrations;
 
@@ -32,7 +33,7 @@ public class AuthenticationTests : IClassFixture<CustomWebApplicationFactory>
     public async Task Login_given_null_or_empty_username_returns_Unauthorized(string username)
     {
         // Arrange
-        var expected = new APIError { Status = 401, ErrorMsg = "Username is missing" };
+        var expected = new APIError { Status = 401, ErrorMsg = USERNAME_MISSING };
 
         // Act
         var actual = await _factory.CreateClient().PostAsJsonAsync("/Authentication/login", new LoginDTO { Username = username, Password = "password" });
@@ -49,7 +50,7 @@ public class AuthenticationTests : IClassFixture<CustomWebApplicationFactory>
     public async Task Login_given_null_or_empty_password_returns_Unauthorized(string password)
     {
         // Arrange
-        var expected = new APIError { Status = 401, ErrorMsg = "Password is missing" };
+        var expected = new APIError { Status = 401, ErrorMsg = PASSWORD_MISSING };
 
         // Act
         var actual = await _factory.CreateClient().PostAsJsonAsync("/Authentication/login", new LoginDTO { Username = "Filled", Password = password });
@@ -64,7 +65,7 @@ public class AuthenticationTests : IClassFixture<CustomWebApplicationFactory>
     public async Task Login_given_invalid_username_returns_Unauthorized()
     {
         // Arrange
-        var expected = new APIError { Status = 401, ErrorMsg = "Invalid username" };
+        var expected = new APIError { Status = 401, ErrorMsg = INVALID_USERNAME };
 
         // Act
         var actual = await _factory.CreateClient().PostAsJsonAsync("/Authentication/login", new LoginDTO { Username = "Test", Password = "password" });
@@ -79,7 +80,7 @@ public class AuthenticationTests : IClassFixture<CustomWebApplicationFactory>
     public async Task Login_given_valid_username_and_invalid_password_returns_Unauthorized()
     {
         // Arrange
-        var expected = new APIError { Status = 401, ErrorMsg = "Invalid password" };
+        var expected = new APIError { Status = 401, ErrorMsg = INVALID_PASSWORD };
 
         // Act
         var actual = await _factory.CreateClient().PostAsJsonAsync("/Authentication/login", new LoginDTO { Username = "Gustav", Password = "wrong" });
@@ -107,7 +108,7 @@ public class AuthenticationTests : IClassFixture<CustomWebApplicationFactory>
     public async Task RefreshToken_given_access_token_with_no_NameIdentifier_returns_Unauthorized()
     {
         // Arrange
-        var expected = new APIError { Status = 401, ErrorMsg = "Invalid token" };
+        var expected = new APIError { Status = 401, ErrorMsg = INVALID_TOKEN };
 
         var accessToken = CreateAccessTokenWithoutNameIdentifier(Guid.NewGuid().ToString(), "Gustav", "test@test.com");
         var refresh = _tokenGenerator.GenerateRefreshToken();
@@ -125,7 +126,7 @@ public class AuthenticationTests : IClassFixture<CustomWebApplicationFactory>
     public async Task RefreshToken_given_unexpired_access_token_returns_Unathorized()
     {
         // Arrange
-        var expected = new APIError { Status = 401, ErrorMsg = "Token has not expired yet" };
+        var expected = new APIError { Status = 401, ErrorMsg = TOKEN_NOT_EXPIRED };
 
         var accessToken = _tokenGenerator.GenerateAccessToken(Guid.NewGuid().ToString(), "000000000000000000000001", "Gustav", "test@test.com");
         var refresh = _tokenGenerator.GenerateRefreshToken();
@@ -143,7 +144,7 @@ public class AuthenticationTests : IClassFixture<CustomWebApplicationFactory>
     public async Task RefreshToken_given_non_existing_refresh_token_returns_Unauthorized()
     {
         // Arrange
-        var expected = new APIError { Status = 401, ErrorMsg = "Invalid token" };
+        var expected = new APIError { Status = 401, ErrorMsg = INVALID_TOKEN };
 
         var accessToken = CreateExpiredAccessToken(Guid.NewGuid().ToString(), "000000000000000000000001", "Gustav", "test@test.com");
         var refresh = _tokenGenerator.GenerateRefreshToken();
@@ -161,7 +162,7 @@ public class AuthenticationTests : IClassFixture<CustomWebApplicationFactory>
     public async Task RefreshToken_given_existing_expired_refresh_token_returns_Unauthorized()
     {
         // Arrange
-        var expected = new APIError { Status = 401, ErrorMsg = "Token expired" };
+        var expected = new APIError { Status = 401, ErrorMsg = TOKEN_EXPIRED };
 
         var accessToken = CreateExpiredAccessToken("3a096f60-2ab0-4ecb-9627-1f02a22cccbd", "000000000000000000000001", "Gustav", "test@test.com");
         var refreshToken = "00000000000000000000000000000001";
@@ -179,7 +180,7 @@ public class AuthenticationTests : IClassFixture<CustomWebApplicationFactory>
     public async Task RefreshToken_given_invalidated_existing_nonexpired_refresh_token_returns_Unauthorized()
     {
         // Arrange
-        var expected = new APIError { Status = 401, ErrorMsg = "Token has been invalidated" };
+        var expected = new APIError { Status = 401, ErrorMsg = TOKEN_INVALIDATED };
 
         var accessToken = CreateExpiredAccessToken("940890ef-5aff-4946-94b6-d6336979dabf", "000000000000000000000001", "Gustav", "test@test.com");
         var refreshToken = "00000000000000000000000000000003";
@@ -197,7 +198,7 @@ public class AuthenticationTests : IClassFixture<CustomWebApplicationFactory>
     public async Task RefreshToken_given_used_existing_nonexpired_refresh_token_returns_Unauthorized()
     {
         // Arrange
-        var expected = new APIError { Status = 401, ErrorMsg = "Token has already been used" };
+        var expected = new APIError { Status = 401, ErrorMsg = TOKEN_USED };
 
         var accessToken = CreateExpiredAccessToken("b8a21733-a66b-4c01-829a-aafe09638fa7", "000000000000000000000001", "Gustav", "test@test.com");
         var refreshToken = "00000000000000000000000000000004";
@@ -215,7 +216,7 @@ public class AuthenticationTests : IClassFixture<CustomWebApplicationFactory>
     public async Task RefreshToken_given_refresh_token_not_belonging_to_access_token_returns_Unauthorized()
     {
         // Arrange
-        var expected = new APIError { Status = 401, ErrorMsg = "Invalid token" };
+        var expected = new APIError { Status = 401, ErrorMsg = INVALID_TOKEN };
 
         var accessToken = CreateExpiredAccessToken("b8a21733-a66b-4c01-829a-aafe09638fa7", "000000000000000000000001", "Gustav", "test@test.com");
         var refreshToken = "00000000000000000000000000000002";
@@ -233,7 +234,7 @@ public class AuthenticationTests : IClassFixture<CustomWebApplicationFactory>
     public async Task RefreshToken_given_access_token_with_invalid_userId_returns_Unauthorized()
     {
         // Arrange
-        var expected = new APIError { Status = 401, ErrorMsg = "Invalid user id" };
+        var expected = new APIError { Status = 401, ErrorMsg = INVALID_USER_ID };
 
         var accessToken = CreateExpiredAccessToken("3fc85c49-6dce-4e66-abad-e3b7c1aea29e", "000000000000000000000000", "Gustav", "test@test.com");
         var refreshToken = "00000000000000000000000000000002";

@@ -5,7 +5,7 @@ using MiniTwit.Security.Hashing;
 using MiniTwit.Service.Services;
 using MiniTwit.Core.Entities;
 using MiniTwit.Core.DTOs;
-using static MiniTwit.Core.Error.DBError;
+using static MiniTwit.Core.Error.Errors;
 using static MiniTwit.Core.Responses.HTTPResponse;
 
 namespace MiniTwit.Tests.Service.Tests.Services;
@@ -42,7 +42,7 @@ public class UserServiceTests
     public async Task GetUserByUsernameAsync_given_valid_username_returns_Ok_and_User()
     {
         // Arrange
-        var expected = new APIResponse<UserDTO>(Ok, new UserDTO{ Id = "000000000000000000000001", Username = "Gustav", Email = "test@test.com" }, null);
+        var expected = new APIResponse<UserDTO>(Ok, new UserDTO{ Id = "000000000000000000000001", Username = "Gustav", Email = "test@test.com" });
 
         var repository = new Mock<IUserRepository>();
         repository.Setup(r => r.GetByUsernameAsync("Gustav", _ct)).ReturnsAsync(new DBResult<User>{ Model = new User { Id = "000000000000000000000001", Username = "Gustav", Email = "test@test.com", Password = "password", Salt = "salt" }, DBError = null });
@@ -134,7 +134,7 @@ public class UserServiceTests
     public async Task RegisterUserAsync_given_valid_user_information_returns_Created()
     {
         // Arrange
-        var expected = new APIResponse(Created, null);
+        var expected = new APIResponse(Created);
 
         var repository = new Mock<IUserRepository>();
         repository.Setup(r => r.GetByUsernameAsync("Gustav", _ct)).ReturnsAsync(new DBResult<User>{ Model = null, DBError = INVALID_USERNAME });
