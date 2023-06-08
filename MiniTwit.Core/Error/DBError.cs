@@ -16,6 +16,7 @@ public enum DBError
     PASSWORD_MISSING,
     INVALID_TOKEN,
     TOKEN_EXPIRED,
+    TOKEN_NOT_EXPIRED,
     TOKEN_INVALIDATED,
     NO_TOKEN
 }
@@ -36,6 +37,7 @@ public static class DBErrorExtensions
         INVALID_TOKEN => "Invalid token",
         NO_TOKEN => "No token found",
         TOKEN_EXPIRED => "Token expired",
+        TOKEN_NOT_EXPIRED => "Token has not expired yet",
         TOKEN_INVALIDATED => "Token has been invalided",
         _ => "Unknown error!"
     };
