@@ -25,9 +25,6 @@ function Start-Backend {
 
     Println "Starting MiniTwit Backend..." Green
     dotnet run --project MiniTwit.Server
-
-    Println "Stopping and removing MongoDB..." Red
-    docker stop mongodb
 }
 
 function Print-Help {
@@ -35,24 +32,26 @@ function Print-Help {
     Println "Available Commands:"
     Println ">> Run the MiniTwit Backend and datase"
     Println ">> secrets - Initialize .NET Secrets"
-    Println ">> stop - Stop MongoDB"
     Println ">> -h - Print this page"
     Println "----------------" Green
 }
 
-if ($args.Count -eq 0) {
-    Start-Backend
+try {
+    if ($args.Count -eq 0) {
+        Start-Backend
+    }
+    elseif ($args[0] -eq "secrets") {
+        Setup-Secrets
+    }
+    elseif ($args[0] -eq "-h") {
+        Print-Help
+    }
+    else {
+        Println "Error: Unknown command" Red
+        Println "For a list of available commands type './run.ps1 -h'" Red
+    }
 }
-elseif ($args[0] -eq "secrets") {
-    Setup-Secrets
-}
-elseif ($args[0] -eq "stop") {
+finally {
+    Println "Stopping and removing MongoDB..." Red
     docker stop mongodb
-}
-elseif ($args[0] -eq "-h") {
-    Print-Help
-}
-else {
-    Println "Error: Unknown command" Red
-    Println "For a list of available commands type './run.ps1 -h'" Red
 }
