@@ -9,12 +9,14 @@ using MiniTwit.Security.Hashing;
 using MiniTwit.Core.MongoDB.DependencyInjection;
 using MiniTwit.Core.Entities;
 using MiniTwit.Core;
+using MiniTwit.Security.Authentication;
 
 namespace MiniTwit.Tests.Integration.Tests;
 
 public class CustomWebApplicationFactory : WebApplicationFactory<Program>
 {
     private readonly IMongoRunner _runner;
+    public JwtSettings JwtSettings = null!;
 
     public CustomWebApplicationFactory()
     {
@@ -38,13 +40,38 @@ public class CustomWebApplicationFactory : WebApplicationFactory<Program>
                 services.Remove(mongoContext);
             }
 
-            // Add Test Scheme defined in TestAuthHandler
+            var jwtSettings = services.SingleOrDefault(js => js.ServiceType == typeof(JwtSettings));
+
+            if (jwtSettings != null)
+            {
+                services.Remove(jwtSettings);
+            }
+
+            // Override Test Scheme defined in TestAuthHandler
             services.AddAuthentication(options =>
             {
                 options.DefaultAuthenticateScheme = "Test";
                 options.DefaultChallengeScheme = "Test";
                 options.DefaultScheme = "Test";
             }).AddScheme<AuthenticationSchemeOptions, TestAuthHandler>("Test", options => { });
+
+            JwtSettings = new JwtSettings
+            {
+                Issuer = "Issuer",
+                Audience = "Audience",
+                Key = "4afffa2c-f56a-4b78-86b2-7ce592447fb5",
+                TokenExpiryMin = 5,
+                RefreshTokenExpiryMin = 60
+            };
+
+            services.Configure<JwtSettings>(options =>
+            {
+                options.Issuer = JwtSettings.Issuer;
+                options.Audience = JwtSettings.Audience;
+                options.Key = JwtSettings.Key;
+                options.TokenExpiryMin = JwtSettings.TokenExpiryMin;
+                options.RefreshTokenExpiryMin = JwtSettings.RefreshTokenExpiryMin;
+            });
 
             services.AddMongoContext<IMiniTwitContext, MiniTwitContext>(options =>
             {
@@ -56,7 +83,7 @@ public class CustomWebApplicationFactory : WebApplicationFactory<Program>
             using var scope = provider.CreateScope();
             var appContext = scope.ServiceProvider.GetRequiredService<IMiniTwitContext>();
             var hasher = scope.ServiceProvider.GetRequiredService<IHasher>();
-
+            
             Seed(appContext, hasher);
         });
 
@@ -227,5 +254,48 @@ public class CustomWebApplicationFactory : WebApplicationFactory<Program>
         };
 
         context.Followers.InsertMany(new[] { f1, f2, f3, f4 });
+
+        // Refresh Tokens
+        var rt1 = new RefreshToken
+        {
+            JwtId = "3a096f60-2ab0-4ecb-9627-1f02a22cccbd",
+            Token = "00000000000000000000000000000001",
+            UserId = "000000000000000000000001",
+            ExpiryTime = DateTime.Parse("01/01/2023 12:00:00").ToUniversalTime(),
+            Used = false,
+            Invalidated = false
+        };
+
+        var rt2 = new RefreshToken
+        {
+            JwtId = "3fc85c49-6dce-4e66-abad-e3b7c1aea29e",
+            Token = "00000000000000000000000000000002",
+            UserId = "000000000000000000000001",
+            ExpiryTime = DateTime.UtcNow.AddMinutes(JwtSettings.RefreshTokenExpiryMin),
+            Used = false,
+            Invalidated = false
+        };
+
+        var rt3 = new RefreshToken
+        {
+            JwtId = "940890ef-5aff-4946-94b6-d6336979dabf",
+            Token = "00000000000000000000000000000003",
+            UserId = "000000000000000000000001",
+            ExpiryTime = DateTime.UtcNow.AddMinutes(JwtSettings.RefreshTokenExpiryMin),
+            Used = false,
+            Invalidated = true
+        };
+
+        var rt4 = new RefreshToken
+        {
+            JwtId = "b8a21733-a66b-4c01-829a-aafe09638fa7",
+            Token = "00000000000000000000000000000004",
+            UserId = "000000000000000000000001",
+            ExpiryTime = DateTime.UtcNow.AddMinutes(JwtSettings.RefreshTokenExpiryMin),
+            Used = true,
+            Invalidated = false
+        };
+
+        context.RefreshTokens.InsertMany(new[] { rt1, rt2, rt3, rt4 });
     }
 }
