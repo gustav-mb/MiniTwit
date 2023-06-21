@@ -76,7 +76,7 @@ public class RepositoryTests : IDisposable
             Id = "000000000000000000000001",
             AuthorId = u1.Id,
             Text = "Gustav's first tweet!",
-            PubDate = DateTime.Parse("01/01/2023 12:00:00", CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal),
+            PubDate = DateTime.Parse("01/01/2023 12:00:00").ToUniversalTime(),
             Flagged = false
         };
 
@@ -85,7 +85,7 @@ public class RepositoryTests : IDisposable
             Id = "000000000000000000000002",
             AuthorId = u1.Id,
             Text = "Gustav's second tweet!",
-            PubDate = DateTime.Parse("01/01/2023 12:00:00", CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal),
+            PubDate = DateTime.Parse("01/01/2023 12:00:00").ToUniversalTime(),
             Flagged = false
         };
 
@@ -94,7 +94,7 @@ public class RepositoryTests : IDisposable
             Id = "000000000000000000000003",
             AuthorId = u1.Id,
             Text = "Gustav's Flagged",
-            PubDate = DateTime.Parse("01/01/2023 12:00:01", CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal),
+            PubDate = DateTime.Parse("01/01/2023 12:00:01").ToUniversalTime(),
             Flagged = true
         };
 
@@ -103,7 +103,7 @@ public class RepositoryTests : IDisposable
             Id = "000000000000000000000004",
             AuthorId = u2.Id,
             Text = "Simon's first tweet",
-            PubDate = DateTime.Parse("01/01/2023 12:00:02", CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal),
+            PubDate = DateTime.Parse("01/01/2023 12:00:02").ToUniversalTime(),
             Flagged = false
         };
 
@@ -112,7 +112,7 @@ public class RepositoryTests : IDisposable
             Id = "000000000000000000000005",
             AuthorId = u2.Id,
             Text = "Simon's second tweet",
-            PubDate = DateTime.Parse("01/01/2023 12:00:03", CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal),
+            PubDate = DateTime.Parse("01/01/2023 12:00:03").ToUniversalTime(),
             Flagged = false
         };
 
@@ -121,7 +121,7 @@ public class RepositoryTests : IDisposable
             Id = "000000000000000000000006",
             AuthorId = u2.Id,
             Text = "Simon's third tweet",
-            PubDate = DateTime.Parse("01/01/2023 12:00:04", CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal),
+            PubDate = DateTime.Parse("01/01/2023 12:00:04").ToUniversalTime(),
             Flagged = false
         };
 
@@ -130,7 +130,7 @@ public class RepositoryTests : IDisposable
             Id = "000000000000000000000007",
             AuthorId = u3.Id,
             Text = "Nikolaj1",
-            PubDate = DateTime.Parse("01/01/2023 12:00:05", CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal),
+            PubDate = DateTime.Parse("01/01/2023 12:00:05").ToUniversalTime(),
             Flagged = false
         };
 
@@ -139,7 +139,7 @@ public class RepositoryTests : IDisposable
             Id = "000000000000000000000008",
             AuthorId = u3.Id,
             Text = "Nikolaj2",
-            PubDate = DateTime.Parse("01/01/2023 12:00:06", CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal),
+            PubDate = DateTime.Parse("01/01/2023 12:00:06").ToUniversalTime(),
             Flagged = false
         };
 
@@ -148,7 +148,7 @@ public class RepositoryTests : IDisposable
             Id = "000000000000000000000009",
             AuthorId = u4.Id,
             Text = "Victor1",
-            PubDate = DateTime.Parse("01/01/2023 12:00:01", CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal),
+            PubDate = DateTime.Parse("01/01/2023 12:00:01").ToUniversalTime(),
             Flagged = false
         };
 
@@ -157,7 +157,7 @@ public class RepositoryTests : IDisposable
             Id = "000000000000000000000010",
             AuthorId = u4.Id,
             Text = "Victor2",
-            PubDate = DateTime.Parse("01/01/2023 12:00:02", CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal),
+            PubDate = DateTime.Parse("01/01/2023 12:00:02").ToUniversalTime(),
             Flagged = false
         };
 

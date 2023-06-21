@@ -1,11 +1,14 @@
 using Moq;
 using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Http;
+using System.Security.Claims;
 using MiniTwit.Server.Controllers;
 using MiniTwit.Service;
 using MiniTwit.Core.Responses;
 using MiniTwit.Core.DTOs;
 using MiniTwit.Core.Error;
+using MiniTwit.Server.Extensions;
 using static MiniTwit.Core.Error.Errors;
 using static MiniTwit.Core.Responses.HTTPResponse;
 
@@ -120,7 +123,9 @@ public class TweetControllerTests
 
         var serviceManager = new Mock<IServiceManager>();
         serviceManager.Setup(sm => sm.TweetService.CreateTweetAsync(new TweetCreateDTO { AuthorId = "000000000000000000000000", Text = "text" })).ReturnsAsync(new APIResponse(NotFound, INVALID_USER_ID));
+        
         var controller = new TweetController(serviceManager.Object, _logger.Object);
+        controller.ControllerContext.HttpContext = CreateHttpContextWithClaims("000000000000000000000000");
 
         // Act
         var actual = await controller.AddMessage(new TweetCreateDTO { AuthorId = "000000000000000000000000", Text = "text" }) as NotFoundObjectResult;
@@ -136,7 +141,9 @@ public class TweetControllerTests
         // Arrange
         var serviceManager = new Mock<IServiceManager>();
         serviceManager.Setup(sm => sm.TweetService.CreateTweetAsync(new TweetCreateDTO { AuthorId = "000000000000000000000001", Text = "text" })).ReturnsAsync(new APIResponse(Created));
+        
         var controller = new TweetController(serviceManager.Object, _logger.Object);
+        controller.ControllerContext.HttpContext = CreateHttpContextWithClaims("000000000000000000000001");
 
         // Act
         var actual = await controller.AddMessage(new TweetCreateDTO { AuthorId = "000000000000000000000001", Text = "text" }) as CreatedResult;
@@ -145,5 +152,36 @@ public class TweetControllerTests
         Assert.Equal(201, actual!.StatusCode);
         Assert.Equal("", actual.Location);
         Assert.Null(actual.Value);
+    }
+
+    [Fact]
+    public async Task AddMessage_given_different_UserId_in_claims_returns_Forbidden()
+    {
+        // Arrange
+        var expected = new APIError { Status = 403, ErrorMsg = FORBIDDEN_OPERATION };
+
+        var serviceManager = new Mock<IServiceManager>();
+        var controller = new TweetController(serviceManager.Object, _logger.Object);
+        controller.ControllerContext.HttpContext = CreateHttpContextWithClaims("000000000000000000000000");
+
+        // Act
+        var actual = await controller.AddMessage(new TweetCreateDTO { AuthorId = "000000000000000000000001", Text = "text" }) as ForbiddenObjectResult;
+
+        // Assert
+        Assert.Equal(403, actual!.StatusCode);
+        Assert.Equal(expected, actual.Value);
+    }
+
+    public DefaultHttpContext CreateHttpContextWithClaims(string userId)
+    {
+        var principal = new ClaimsPrincipal(new ClaimsIdentity(new[]
+        {
+            new Claim(ClaimTypes.NameIdentifier, userId)
+        }));
+
+        return new DefaultHttpContext
+        {
+            User = principal
+        };
     }
 }

@@ -1,14 +1,14 @@
 using EphemeralMongo;
-using System.Globalization;
+using MongoDB.Bson;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Hosting;
 using MiniTwit.Infrastructure;
-using MiniTwit.Security.Hashing;
 using MiniTwit.Core.MongoDB.DependencyInjection;
 using MiniTwit.Core.Entities;
 using MiniTwit.Core;
+using MiniTwit.Security.Hashing;
 using MiniTwit.Security.Authentication;
 
 namespace MiniTwit.Tests.Integration.Tests;
@@ -16,7 +16,7 @@ namespace MiniTwit.Tests.Integration.Tests;
 public class CustomWebApplicationFactory : WebApplicationFactory<Program>
 {
     private readonly IMongoRunner _runner;
-    public JwtSettings JwtSettings = null!;
+    public JwtSettings JwtSettings { private set; get; } = null!;
 
     public CustomWebApplicationFactory()
     {
@@ -31,6 +31,8 @@ public class CustomWebApplicationFactory : WebApplicationFactory<Program>
 
     protected override IHost CreateHost(IHostBuilder builder)
     {
+        builder.UseEnvironment("Integration");
+
         builder.ConfigureServices(services =>
         {
             var mongoContext = services.SingleOrDefault(mc => mc.ServiceType == typeof(MiniTwitContext));
@@ -40,26 +42,11 @@ public class CustomWebApplicationFactory : WebApplicationFactory<Program>
                 services.Remove(mongoContext);
             }
 
-            var jwtSettings = services.SingleOrDefault(js => js.ServiceType == typeof(JwtSettings));
-
-            if (jwtSettings != null)
-            {
-                services.Remove(jwtSettings);
-            }
-
-            // Override Test Scheme defined in TestAuthHandler
-            services.AddAuthentication(options =>
-            {
-                options.DefaultAuthenticateScheme = "Test";
-                options.DefaultChallengeScheme = "Test";
-                options.DefaultScheme = "Test";
-            }).AddScheme<AuthenticationSchemeOptions, TestAuthHandler>("Test", options => { });
-
             JwtSettings = new JwtSettings
             {
                 Issuer = "Issuer",
                 Audience = "Audience",
-                Key = "4afffa2c-f56a-4b78-86b2-7ce592447fb5",
+                Key = "3d4ab1fc-3cf8-489e-b342-cb2f64ca20ee",
                 TokenExpiryMin = 5,
                 RefreshTokenExpiryMin = 60
             };
@@ -83,17 +70,20 @@ public class CustomWebApplicationFactory : WebApplicationFactory<Program>
             using var scope = provider.CreateScope();
             var appContext = scope.ServiceProvider.GetRequiredService<IMiniTwitContext>();
             var hasher = scope.ServiceProvider.GetRequiredService<IHasher>();
-            
+
             Seed(appContext, hasher);
         });
-
-        builder.UseEnvironment("Integration");
 
         return base.CreateHost(builder);
     }
 
     private void Seed(IMiniTwitContext context, IHasher hasher)
     {
+        if (context.Users.CountDocuments(new BsonDocument()) > 0)
+        {
+            return;
+        }
+
         var hashResult = hasher.Hash("password");
 
         // Users
@@ -141,7 +131,7 @@ public class CustomWebApplicationFactory : WebApplicationFactory<Program>
             Id = "000000000000000000000001",
             AuthorId = u1.Id,
             Text = "Gustav's first tweet!",
-            PubDate = DateTime.Parse("01/01/2023 12:00:00", CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal),
+            PubDate = DateTime.Parse("01/01/2023 12:00:00").ToUniversalTime(),
             Flagged = false
         };
 
@@ -150,7 +140,7 @@ public class CustomWebApplicationFactory : WebApplicationFactory<Program>
             Id = "000000000000000000000002",
             AuthorId = u1.Id,
             Text = "Gustav's second tweet!",
-            PubDate = DateTime.Parse("01/01/2023 12:00:00", CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal),
+            PubDate = DateTime.Parse("01/01/2023 12:00:00").ToUniversalTime(),
             Flagged = false
         };
 
@@ -159,7 +149,7 @@ public class CustomWebApplicationFactory : WebApplicationFactory<Program>
             Id = "000000000000000000000003",
             AuthorId = u1.Id,
             Text = "Gustav's Flagged",
-            PubDate = DateTime.Parse("01/01/2023 12:00:01", CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal),
+            PubDate = DateTime.Parse("01/01/2023 12:00:01").ToUniversalTime(),
             Flagged = true
         };
 
@@ -168,7 +158,7 @@ public class CustomWebApplicationFactory : WebApplicationFactory<Program>
             Id = "000000000000000000000004",
             AuthorId = u2.Id,
             Text = "Simon's first tweet",
-            PubDate = DateTime.Parse("01/01/2023 12:00:02", CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal),
+            PubDate = DateTime.Parse("01/01/2023 12:00:02").ToUniversalTime(),
             Flagged = false
         };
 
@@ -177,7 +167,7 @@ public class CustomWebApplicationFactory : WebApplicationFactory<Program>
             Id = "000000000000000000000005",
             AuthorId = u2.Id,
             Text = "Simon's second tweet",
-            PubDate = DateTime.Parse("01/01/2023 12:00:03", CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal),
+            PubDate = DateTime.Parse("01/01/2023 12:00:03").ToUniversalTime(),
             Flagged = false
         };
 
@@ -186,7 +176,7 @@ public class CustomWebApplicationFactory : WebApplicationFactory<Program>
             Id = "000000000000000000000006",
             AuthorId = u2.Id,
             Text = "Simon's third tweet",
-            PubDate = DateTime.Parse("01/01/2023 12:00:04", CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal),
+            PubDate = DateTime.Parse("01/01/2023 12:00:04").ToUniversalTime(),
             Flagged = false
         };
 
@@ -195,7 +185,7 @@ public class CustomWebApplicationFactory : WebApplicationFactory<Program>
             Id = "000000000000000000000007",
             AuthorId = u3.Id,
             Text = "Nikolaj1",
-            PubDate = DateTime.Parse("01/01/2023 12:00:05", CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal),
+            PubDate = DateTime.Parse("01/01/2023 12:00:05").ToUniversalTime(),
             Flagged = false
         };
 
@@ -204,7 +194,7 @@ public class CustomWebApplicationFactory : WebApplicationFactory<Program>
             Id = "000000000000000000000008",
             AuthorId = u3.Id,
             Text = "Nikolaj2",
-            PubDate = DateTime.Parse("01/01/2023 12:00:06", CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal),
+            PubDate = DateTime.Parse("01/01/2023 12:00:06").ToUniversalTime(),
             Flagged = false
         };
 
@@ -213,7 +203,7 @@ public class CustomWebApplicationFactory : WebApplicationFactory<Program>
             Id = "000000000000000000000009",
             AuthorId = u4.Id,
             Text = "Victor1",
-            PubDate = DateTime.Parse("01/01/2023 12:00:01", CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal),
+            PubDate = DateTime.Parse("01/01/2023 12:00:01").ToUniversalTime(),
             Flagged = false
         };
 
@@ -222,7 +212,7 @@ public class CustomWebApplicationFactory : WebApplicationFactory<Program>
             Id = "000000000000000000000010",
             AuthorId = u4.Id,
             Text = "Victor2",
-            PubDate = DateTime.Parse("01/01/2023 12:00:02", CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal),
+            PubDate = DateTime.Parse("01/01/2023 12:00:02").ToUniversalTime(),
             Flagged = false
         };
 

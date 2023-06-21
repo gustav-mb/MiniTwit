@@ -14,7 +14,7 @@ namespace MiniTwit.Tests.Server.Tests.Controllers;
 public class UserControllerTests
 {
     private readonly Mock<ILogger<UserController>> _logger;
-    
+
     public UserControllerTests()
     {
         _logger = new Mock<ILogger<UserController>>();

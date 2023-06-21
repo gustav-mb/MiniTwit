@@ -33,7 +33,7 @@ public class TweetRepository : ITweetRepository
         {
             AuthorId = user.Id,
             Text = text,
-            PubDate = DateTime.Now,
+            PubDate = DateTime.UtcNow,
             Flagged = false
         };
 

@@ -26,10 +26,10 @@ public class DataInitializer
         var hashResult = _hasher.Hash("password");
 
         // Users
-        var gustav = UserCreator.Create("Gustav", "gustav@minitwit.com", hashResult.Hash);
-        var simon = UserCreator.Create("Simon", "simon@minitwit.com", hashResult.Hash);
-        var nikolaj = UserCreator.Create("Nikolaj", "nikolaj@minitwit.com", hashResult.Hash);
-        var victor = UserCreator.Create("Victor", "victor@minitwit.com", hashResult.Hash);
+        var gustav = UserCreator.Create("Gustav", "gustav@minitwit.com", hashResult.Hash, hashResult.Salt);
+        var simon = UserCreator.Create("Simon", "simon@minitwit.com", hashResult.Hash, hashResult.Salt);
+        var nikolaj = UserCreator.Create("Nikolaj", "nikolaj@minitwit.com", hashResult.Hash, hashResult.Salt);
+        var victor = UserCreator.Create("Victor", "victor@minitwit.com", hashResult.Hash, hashResult.Salt);
         
          _context.Users.InsertMany(new[] { gustav, simon, nikolaj, victor });
 

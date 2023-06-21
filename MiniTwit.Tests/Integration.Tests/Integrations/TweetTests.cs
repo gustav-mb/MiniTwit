@@ -24,9 +24,10 @@ public class TweetTests : IClassFixture<CustomWebApplicationFactory>
     {
         // Arrange
         var expected = new APIError { Status = 404, ErrorMsg = INVALID_USER_ID };
+        var claimsProvider = TestClaimsProvider.Default();
 
         // Act
-        var actual = await _factory.CreateClient().GetAsync("/Tweet/?userId=000000000000000000000000");
+        var actual = await _factory.CreateClient(claimsProvider).GetAsync("/Tweet/?userId=000000000000000000000000");
         var content = await actual.Content.ReadFromJsonAsync<APIError>();
 
         // Assert
@@ -37,18 +38,21 @@ public class TweetTests : IClassFixture<CustomWebApplicationFactory>
     [Fact]
     public async Task Timeline_given_valid_userId_with_null_limit_returns_all_users_and_its_followers_Tweets()
     {
+        // Arrange
+        var claimsProvider = TestClaimsProvider.Default();
+
         // Act
-        var actual = await _factory.CreateClient().GetAsync("/Tweet/?userId=000000000000000000000001");
+        var actual = await _factory.CreateClient(claimsProvider).GetAsync("/Tweet/?userId=000000000000000000000001");
         var content = await actual.Content.ReadFromJsonAsync<IEnumerable<TweetDTO>>();
 
         // Assert
         Assert.Equal(HttpStatusCode.OK, actual.StatusCode);
         Assert.Collection(content!,
-            tweet => tweet.Should().BeEquivalentTo(new TweetDTO { AuthorId = "000000000000000000000002", Text = "Simon's third tweet", PubDate = DateTime.Parse("01/01/2023 12:00:04") }),
-            tweet => tweet.Should().BeEquivalentTo(new TweetDTO { AuthorId = "000000000000000000000002", Text = "Simon's second tweet", PubDate = DateTime.Parse("01/01/2023 12:00:03") }),
-            tweet => tweet.Should().BeEquivalentTo(new TweetDTO { AuthorId = "000000000000000000000002", Text = "Simon's first tweet", PubDate = DateTime.Parse("01/01/2023 12:00:02") }),
-            tweet => tweet.Should().BeEquivalentTo(new TweetDTO { AuthorId = "000000000000000000000001", Text = "Gustav's first tweet!", PubDate = DateTime.Parse("01/01/2023 12:00:00") }),
-            tweet => tweet.Should().BeEquivalentTo(new TweetDTO { AuthorId = "000000000000000000000001", Text = "Gustav's second tweet!", PubDate = DateTime.Parse("01/01/2023 12:00:00") })
+            tweet => tweet.Should().BeEquivalentTo(new TweetDTO { AuthorId = "000000000000000000000002", Text = "Simon's third tweet", PubDate = DateTime.Parse("01/01/2023 12:00:04").ToUniversalTime() }),
+            tweet => tweet.Should().BeEquivalentTo(new TweetDTO { AuthorId = "000000000000000000000002", Text = "Simon's second tweet", PubDate = DateTime.Parse("01/01/2023 12:00:03").ToUniversalTime() }),
+            tweet => tweet.Should().BeEquivalentTo(new TweetDTO { AuthorId = "000000000000000000000002", Text = "Simon's first tweet", PubDate = DateTime.Parse("01/01/2023 12:00:02").ToUniversalTime() }),
+            tweet => tweet.Should().BeEquivalentTo(new TweetDTO { AuthorId = "000000000000000000000001", Text = "Gustav's first tweet!", PubDate = DateTime.Parse("01/01/2023 12:00:00").ToUniversalTime() }),
+            tweet => tweet.Should().BeEquivalentTo(new TweetDTO { AuthorId = "000000000000000000000001", Text = "Gustav's second tweet!", PubDate = DateTime.Parse("01/01/2023 12:00:00").ToUniversalTime() })
         );
     }
 
@@ -63,8 +67,11 @@ public class TweetTests : IClassFixture<CustomWebApplicationFactory>
     [InlineData(5, 6)]
     public async Task Timeline_given_valid_userId_returns_users_and_its_followers_limit_number_of_Tweets(int expected, int? limit)
     {
+        // Arrange
+        var claimsProvider = TestClaimsProvider.Default();
+
         // Act
-        var actual = await _factory.CreateClient().GetAsync($"/Tweet/?userId=000000000000000000000001&limit={limit}");
+        var actual = await _factory.CreateClient(claimsProvider).GetAsync($"/Tweet/?userId=000000000000000000000001&limit={limit}");
         var content = await actual.Content.ReadFromJsonAsync<IEnumerable<TweetDTO>>();
 
         // Assert
@@ -82,15 +89,15 @@ public class TweetTests : IClassFixture<CustomWebApplicationFactory>
         // Assert
         Assert.Equal(HttpStatusCode.OK, actual.StatusCode);
         Assert.Collection(content!,
-            tweet => tweet.Should().BeEquivalentTo(new TweetDTO { AuthorId = "000000000000000000000003", Text = "Nikolaj2", PubDate = DateTime.Parse("01/01/2023 12:00:06") }),
-            tweet => tweet.Should().BeEquivalentTo(new TweetDTO { AuthorId = "000000000000000000000003", Text = "Nikolaj1", PubDate = DateTime.Parse("01/01/2023 12:00:05") }),
-            tweet => tweet.Should().BeEquivalentTo(new TweetDTO { AuthorId = "000000000000000000000002", Text = "Simon's third tweet", PubDate = DateTime.Parse("01/01/2023 12:00:04") }),
-            tweet => tweet.Should().BeEquivalentTo(new TweetDTO { AuthorId = "000000000000000000000002", Text = "Simon's second tweet", PubDate = DateTime.Parse("01/01/2023 12:00:03") }),
-            tweet => tweet.Should().BeEquivalentTo(new TweetDTO { AuthorId = "000000000000000000000002", Text = "Simon's first tweet", PubDate = DateTime.Parse("01/01/2023 12:00:02") }),
-            tweet => tweet.Should().BeEquivalentTo(new TweetDTO { AuthorId = "000000000000000000000004", Text = "Victor2", PubDate = DateTime.Parse("01/01/2023 12:00:02") }),
-            tweet => tweet.Should().BeEquivalentTo(new TweetDTO { AuthorId = "000000000000000000000004", Text = "Victor1", PubDate = DateTime.Parse("01/01/2023 12:00:01") }),
-            tweet => tweet.Should().BeEquivalentTo(new TweetDTO { AuthorId = "000000000000000000000001", Text = "Gustav's first tweet!", PubDate = DateTime.Parse("01/01/2023 12:00:00") }),
-            tweet => tweet.Should().BeEquivalentTo(new TweetDTO { AuthorId = "000000000000000000000001", Text = "Gustav's second tweet!", PubDate = DateTime.Parse("01/01/2023 12:00:00") })
+            tweet => tweet.Should().BeEquivalentTo(new TweetDTO { AuthorId = "000000000000000000000003", Text = "Nikolaj2", PubDate = DateTime.Parse("01/01/2023 12:00:06").ToUniversalTime() }),
+            tweet => tweet.Should().BeEquivalentTo(new TweetDTO { AuthorId = "000000000000000000000003", Text = "Nikolaj1", PubDate = DateTime.Parse("01/01/2023 12:00:05").ToUniversalTime() }),
+            tweet => tweet.Should().BeEquivalentTo(new TweetDTO { AuthorId = "000000000000000000000002", Text = "Simon's third tweet", PubDate = DateTime.Parse("01/01/2023 12:00:04").ToUniversalTime() }),
+            tweet => tweet.Should().BeEquivalentTo(new TweetDTO { AuthorId = "000000000000000000000002", Text = "Simon's second tweet", PubDate = DateTime.Parse("01/01/2023 12:00:03").ToUniversalTime() }),
+            tweet => tweet.Should().BeEquivalentTo(new TweetDTO { AuthorId = "000000000000000000000002", Text = "Simon's first tweet", PubDate = DateTime.Parse("01/01/2023 12:00:02").ToUniversalTime() }),
+            tweet => tweet.Should().BeEquivalentTo(new TweetDTO { AuthorId = "000000000000000000000004", Text = "Victor2", PubDate = DateTime.Parse("01/01/2023 12:00:02").ToUniversalTime() }),
+            tweet => tweet.Should().BeEquivalentTo(new TweetDTO { AuthorId = "000000000000000000000004", Text = "Victor1", PubDate = DateTime.Parse("01/01/2023 12:00:01").ToUniversalTime() }),
+            tweet => tweet.Should().BeEquivalentTo(new TweetDTO { AuthorId = "000000000000000000000001", Text = "Gustav's first tweet!", PubDate = DateTime.Parse("01/01/2023 12:00:00").ToUniversalTime() }),
+            tweet => tweet.Should().BeEquivalentTo(new TweetDTO { AuthorId = "000000000000000000000001", Text = "Gustav's second tweet!", PubDate = DateTime.Parse("01/01/2023 12:00:00").ToUniversalTime() })
         );
     }
 
@@ -124,9 +131,9 @@ public class TweetTests : IClassFixture<CustomWebApplicationFactory>
         // Assert
         Assert.Equal(HttpStatusCode.OK, actual.StatusCode);
         Assert.Collection(content!,
-            tweet => tweet.Should().BeEquivalentTo(new TweetDTO { AuthorId = "000000000000000000000001", Text = "Gustav's Flagged", PubDate = DateTime.Parse("01/01/2023 12:00:01") }),
-            tweet => tweet.Should().BeEquivalentTo(new TweetDTO { AuthorId = "000000000000000000000001", Text = "Gustav's first tweet!", PubDate = DateTime.Parse("01/01/2023 12:00:00") }),
-            tweet => tweet.Should().BeEquivalentTo(new TweetDTO { AuthorId = "000000000000000000000001", Text = "Gustav's second tweet!", PubDate = DateTime.Parse("01/01/2023 12:00:00") })
+            tweet => tweet.Should().BeEquivalentTo(new TweetDTO { AuthorId = "000000000000000000000001", Text = "Gustav's Flagged", PubDate = DateTime.Parse("01/01/2023 12:00:01").ToUniversalTime() }),
+            tweet => tweet.Should().BeEquivalentTo(new TweetDTO { AuthorId = "000000000000000000000001", Text = "Gustav's first tweet!", PubDate = DateTime.Parse("01/01/2023 12:00:00").ToUniversalTime() }),
+            tweet => tweet.Should().BeEquivalentTo(new TweetDTO { AuthorId = "000000000000000000000001", Text = "Gustav's second tweet!", PubDate = DateTime.Parse("01/01/2023 12:00:00").ToUniversalTime() })
         );
     }
 
@@ -170,9 +177,10 @@ public class TweetTests : IClassFixture<CustomWebApplicationFactory>
     {
         // Arrange
         var expected = new APIError { Status = 404, ErrorMsg = INVALID_USER_ID };
+        var claimsProvider = TestClaimsProvider.WithNameIdentifier("000000000000000000000000");
 
         // Act
-        var actual = await _factory.CreateClient().PostAsJsonAsync("/Tweet/add_message", new TweetCreateDTO { AuthorId = "000000000000000000000000", Text = "New Tweet" });
+        var actual = await _factory.CreateClient(claimsProvider).PostAsJsonAsync("/Tweet/add_message", new TweetCreateDTO { AuthorId = "000000000000000000000000", Text = "New Tweet" });
         var content = await actual.Content.ReadFromJsonAsync<APIError>();
 
         // Assert
@@ -181,11 +189,30 @@ public class TweetTests : IClassFixture<CustomWebApplicationFactory>
     }
 
     [Fact]
-    [Priority(1)]
-    public async Task AddMessage_given_valid_AuthorId_returns_Created()
+    public async Task AddMessage_given_different_provided_claim_id_than_AuthorId_returns_Forbidden()
     {
+        // Arrange
+        var expected = new APIError { Status = 403, ErrorMsg = FORBIDDEN_OPERATION };
+        var claimsProvider = TestClaimsProvider.WithNameIdentifier("000000000000000000000000");
+
         // Act
-        var actual = await _factory.CreateClient().PostAsJsonAsync("/Tweet/add_message", new TweetCreateDTO { AuthorId = "000000000000000000000001", Text = "New Tweet" });
+        var actual = await _factory.CreateClient(claimsProvider).PostAsJsonAsync("/Tweet/add_message", new TweetCreateDTO { AuthorId = "000000000000000000000001", Text = "New Tweet" });
+        var content = await actual.Content.ReadFromJsonAsync<APIError>();
+
+        // Assert
+        Assert.Equal(HttpStatusCode.Forbidden, actual.StatusCode);
+        Assert.Equal(expected, content);
+    }
+
+    [Fact]
+    [Priority(1)]
+    public async Task AddMessage_given_valid_AuthorId_and_claims_UserId_returns_Created()
+    {
+        // Arrange
+        var claimsProvider = TestClaimsProvider.WithNameIdentifier("000000000000000000000001");
+
+        // Act
+        var actual = await _factory.CreateClient(claimsProvider).PostAsJsonAsync("/Tweet/add_message", new TweetCreateDTO { AuthorId = "000000000000000000000001", Text = "New Tweet" });
 
         // Assert
         Assert.Equal(HttpStatusCode.Created, actual.StatusCode);
