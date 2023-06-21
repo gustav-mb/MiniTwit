@@ -11,6 +11,6 @@ public static class HttpContextExtensions
             return null;
         }
         
-        return context.User.Claims.Single(claim => claim.Type == ClaimTypes.NameIdentifier).Value;
+        return context.User.Claims.SingleOrDefault(claim => claim.Type == ClaimTypes.NameIdentifier)?.Value;
     }
 }
