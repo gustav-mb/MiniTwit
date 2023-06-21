@@ -6,19 +6,18 @@ using Microsoft.Extensions.Options;
 
 namespace MiniTwit.Tests.Integration.Tests;
 
-internal sealed class TestAuthHandler : AuthenticationHandler<AuthenticationSchemeOptions>
+public class TestAuthHandler : AuthenticationHandler<AuthenticationSchemeOptions>
 {
-    public TestAuthHandler(IOptionsMonitor<AuthenticationSchemeOptions> options, ILoggerFactory logger, UrlEncoder encoder, ISystemClock clock) : base(options, logger, encoder, clock) { }
+    private readonly TestClaimsProvider _testClaimsProvider;
+
+    public TestAuthHandler(IOptionsMonitor<AuthenticationSchemeOptions> options, ILoggerFactory logger, UrlEncoder encoder, ISystemClock clock, TestClaimsProvider testClaimsProvider) : base(options, logger, encoder, clock)
+    {
+        _testClaimsProvider = testClaimsProvider;
+    }
 
     protected override Task<AuthenticateResult> HandleAuthenticateAsync()
     {
-        var claims = new[]
-        {
-            new Claim(ClaimTypes.Name, "Test user"),
-            new Claim(ClaimTypes.NameIdentifier, Guid.NewGuid().ToString())
-        };
-
-        var identity = new ClaimsIdentity(claims, "Test");
+        var identity = new ClaimsIdentity(_testClaimsProvider.Claims, "Test");
         var principal = new ClaimsPrincipal(identity);
         var ticket = new AuthenticationTicket(principal, "Test");
 
