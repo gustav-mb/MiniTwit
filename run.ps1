@@ -52,6 +52,8 @@ try {
     }
 }
 finally {
-    Println "Stopping and removing MongoDB..." Red
-    docker stop mongodb
+    if ($args.Count -eq 0) {
+        Println "Stopping and removing MongoDB..." Red
+        docker stop mongodb
+    }
 }
