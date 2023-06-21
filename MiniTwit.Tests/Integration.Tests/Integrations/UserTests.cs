@@ -95,8 +95,11 @@ public class UserTests : IClassFixture<CustomWebApplicationFactory>
     [Fact]
     public async Task Logout_returns_Ok()
     {
+        // Arrange
+        var claimsProvider = TestClaimsProvider.Default();
+
         // Act
-        var actual = await _factory.CreateClient().PostAsync("/User/logout", null);
+        var actual = await _factory.CreateClient(claimsProvider).PostAsync("/User/logout", null);
 
         // Assert
         Assert.Equal(HttpStatusCode.OK, actual.StatusCode);
