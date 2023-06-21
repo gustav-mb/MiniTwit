@@ -48,7 +48,7 @@ builder.Services.AddJwtAuthentication(options =>
 {
     options.Issuer = jwtSettings.Issuer;
     options.Audience = jwtSettings.Audience;
-    options.Key = builder.Configuration.GetJwtKey()!;
+    options.Key = jwtSettings.Key;
     options.TokenExpiryMin = jwtSettings.TokenExpiryMin;
     options.RefreshTokenExpiryMin = jwtSettings.RefreshTokenExpiryMin;
 });
