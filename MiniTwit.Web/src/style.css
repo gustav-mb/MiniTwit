@@ -183,3 +183,54 @@ div.error {
     padding: 4px;
     font-size: 13px;
 }
+
+.follow-link {
+    cursor: pointer;
+    text-decoration: underline;
+    color: #26776F;
+}
+
+.follow-link:hover {
+    color: #333;
+}
+
+@media screen and (max-width: 900px) {
+    div.page {
+        width: 80%;
+    }
+
+    .scrollable-container {
+        height: 750px;
+        overflow-y: auto;
+    }
+}
+
+@media screen and (max-width: 805px) {
+    .message-content {
+        width: 85%;
+    }
+
+    .scrollable-container {
+        height: 650px;
+        overflow-y: auto;
+    }
+}
+
+
+@media screen and (max-width: 770px) {
+    img {
+        width: 25px;
+        height: 25px;
+    }
+}
+
+@media screen and (max-width: 700px) {
+    div.page {
+        width: 95%;
+    }
+
+    .scrollable-container {
+        height: 600px;
+        overflow-y: auto;
+    }
+}
