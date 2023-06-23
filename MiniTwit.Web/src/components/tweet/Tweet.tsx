@@ -1,10 +1,10 @@
 import { Md5 } from "ts-md5";
-import { TweetDTO } from "../models/TweetDTO";
+import { TweetDTO } from "../../models/TweetDTO";
 
 function Tweet(tweet: TweetDTO) {
     return (
         <li>
-            <img src={ getGravatarURL(tweet.email, 48)}></img>
+            <img src={ getGravatarURL(tweet.email, 48)} alt="avatar"></img>
             <p>
                 <strong><a href={tweet.username}>{ tweet.username }</a></strong>
             </p>

@@ -1,6 +1,6 @@
-import { TweetDTO } from "../models/TweetDTO";
-import { useDocumentTitle } from "../utilities/Utilities";
-import TweetCollection from "./TweetCollection";
+import { TweetDTO } from "../../models/TweetDTO";
+import { useDocumentTitle } from "../../utilities/Utilities";
+import TweetCollection from "../tweet/TweetCollection";
 
 function PublicTimeline() {
     useDocumentTitle("Public Timeline")
