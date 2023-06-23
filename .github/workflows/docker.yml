@@ -30,12 +30,12 @@ jobs:
           cache-from: type=registry,ref=${{ secrets.DOCKERHUB_USERNAME }}/minitwit-backend:serverbuildcache
           cache-to: type=registry,ref=${{ secrets.DOCKERHUB_USERNAME }}/minitwit-backend:serverbuildcache,mode=max
 
-      # - name: Build and push MiniTwit Frontend
-        # uses: docker/build-push-action@v4
-        # with:
-        #   context: .
-        #   file: MiniTwit.Web/Dockerfile
-        #   push: true
-        #   tags: ${{ secrets.DOCKERHUB_USERNAME }}/minitwit-frontend:latest
-        #   cache-from: type=registry,ref=${{ secrets.DOCKERHUB_USERNAME }}/minitwit-frontend:webbuildcache
-        #   cache-to: type=registry,ref=${{ secrets.DOCKERHUB_USERNAME }}/minitwit-frontend:webbuildcache,mode=max
+      - name: Build and push MiniTwit Frontend
+        uses: docker/build-push-action@v4
+        with:
+          context: .
+          file: MiniTwit.Web/Dockerfile
+          push: true
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/minitwit-frontend:latest
+          cache-from: type=registry,ref=${{ secrets.DOCKERHUB_USERNAME }}/minitwit-frontend:webbuildcache
+          cache-to: type=registry,ref=${{ secrets.DOCKERHUB_USERNAME }}/minitwit-frontend:webbuildcache,mode=max
