@@ -1,6 +1,6 @@
 import { Navigate } from "react-router-dom";
-import MyTimeline from "../components/MyTimeLine";
 import { isLoggedIn } from "../authentication/JwtToken";
+import MyTimeline from "../components/timelines/MyTimeLine";
 
 function Timeline() {
     const loggedIn = isLoggedIn()
