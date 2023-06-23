@@ -2,13 +2,13 @@ import './App.css';
 import './style.css';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import Timeline from './pages/TimeLine';
-import PublicTimeline from './components/PublicTimeline';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import UserTimeline from './components/timelines/UserTimeline';
 import Footer from './components/Footer';
 import Header from './components/Header';
 import { isLoggedIn } from './authentication/JwtToken';
+import PublicTimeline from './components/timelines/PublicTimeline';
 
 function App() {
   // useDocumentTitle("Welcome | MiniTwit")
