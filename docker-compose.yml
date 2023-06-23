@@ -47,6 +47,20 @@ services:
       - source: jwt_key
         target: JwtSettings__Key
 
+  minitwit-frontend:
+    image: minitwit-frontend
+    build:
+      context: .
+      dockerfile: MiniTwit.Web/Dockerfile
+    environment:
+      NODE_ENV: development
+    ports:
+      - 3000:3000
+    networks:
+      - main
+    depends_on:
+      - minitwit-backend
+
 volumes:
   minitwit-db_data:
 
