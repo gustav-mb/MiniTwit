@@ -1,4 +1,4 @@
-import { TweetDTO } from "../models/TweetDTO";
+import { TweetDTO } from "../../models/TweetDTO";
 import Tweet from "./Tweet";
 
 function TweetCollection({tweets}: {tweets: TweetDTO[]}) {

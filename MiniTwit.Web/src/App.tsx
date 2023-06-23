@@ -5,7 +5,7 @@ import Timeline from './pages/TimeLine';
 import PublicTimeline from './components/PublicTimeline';
 import Login from './pages/Login';
 import Register from './pages/Register';
-import UserTimeline from './components/UserTimeline';
+import UserTimeline from './components/timelines/UserTimeline';
 import Footer from './components/Footer';
 import Header from './components/Header';
 import { isLoggedIn } from './authentication/JwtToken';

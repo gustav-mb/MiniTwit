@@ -1,6 +1,6 @@
 import { useLocation, useParams } from "react-router-dom";
-import { getUsername } from "../authentication/JwtToken";
-import { useDocumentTitle } from "../utilities/Utilities";
+import { getUsername } from "../../authentication/JwtToken";
+import { useDocumentTitle } from "../../utilities/Utilities";
 
 // TODO Implement follow logic
 const followed = false
