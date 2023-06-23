@@ -17,6 +17,15 @@ function Setup-Secrets {
     Println "Done." Green
 }
 
+function Setup-DevCert {
+    Println "Creating certificate..." Green
+
+    dotnet dev-certs https --clean
+    dotnet dev-certs https -ep $env:USERPROFILE/.aspnet/https/aspnetapp.pfx -p localhost --trust
+
+    Println "Done." Green
+}
+
 function Start-Backend {
     Println "Starting MongoDB..." Green
 
@@ -32,6 +41,7 @@ function Print-Help {
     Println "Available Commands:"
     Println ">> Run the MiniTwit Backend and datase"
     Println ">> secrets - Initialize .NET Secrets"
+    Println ">> certificate - Creates a development certificate for HTTPS"
     Println ">> -h - Print this page"
     Println "----------------" Green
 }
@@ -42,6 +52,9 @@ try {
     }
     elseif ($args[0] -eq "secrets") {
         Setup-Secrets
+    }
+    elseif ($args[0] -eq "certificate") {
+        Setup-DevCert
     }
     elseif ($args[0] -eq "-h") {
         Print-Help
