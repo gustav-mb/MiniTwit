@@ -73,7 +73,14 @@ if (app.Environment.IsDevelopment())
     app.SeedDatabase();
 }
 
-app.UseHttpsRedirection();
+// Cross-origin Request Blocked
+app.UseCors(x => x
+    .AllowAnyMethod()
+    .AllowAnyHeader()
+    .SetIsOriginAllowed(_ => true) // allow any origin
+    .AllowCredentials());
+
+// app.UseHttpsRedirection();
 
 app.UseAuthorization();
 
