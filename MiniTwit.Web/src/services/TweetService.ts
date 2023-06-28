@@ -12,7 +12,7 @@ class TweetService {
         return await axiosClient.get(`${ROUTE}/public?limit=${limit}`)
     }
 
-    public async getUserTimeline(username: string, limit?: number): Promise<TweetDTO[]> {
+    public async getUserTimeline(username: string | undefined, limit?: number): Promise<TweetDTO[]> {
         return await axiosClient.get(`${ROUTE}/${username}?limit=${limit}`)
     }
 
