@@ -130,6 +130,7 @@ public class CustomWebApplicationFactory : WebApplicationFactory<Program>
         {
             Id = "000000000000000000000001",
             AuthorId = u1.Id,
+            AuthorName = u1.Username,
             Text = "Gustav's first tweet!",
             PubDate = DateTime.Parse("01/01/2023 12:00:00").ToUniversalTime(),
             Flagged = false
@@ -139,6 +140,7 @@ public class CustomWebApplicationFactory : WebApplicationFactory<Program>
         {
             Id = "000000000000000000000002",
             AuthorId = u1.Id,
+            AuthorName = u1.Username,
             Text = "Gustav's second tweet!",
             PubDate = DateTime.Parse("01/01/2023 12:00:00").ToUniversalTime(),
             Flagged = false
@@ -148,6 +150,7 @@ public class CustomWebApplicationFactory : WebApplicationFactory<Program>
         {
             Id = "000000000000000000000003",
             AuthorId = u1.Id,
+            AuthorName = u1.Username,
             Text = "Gustav's Flagged",
             PubDate = DateTime.Parse("01/01/2023 12:00:01").ToUniversalTime(),
             Flagged = true
@@ -157,6 +160,7 @@ public class CustomWebApplicationFactory : WebApplicationFactory<Program>
         {
             Id = "000000000000000000000004",
             AuthorId = u2.Id,
+            AuthorName = u2.Username,
             Text = "Simon's first tweet",
             PubDate = DateTime.Parse("01/01/2023 12:00:02").ToUniversalTime(),
             Flagged = false
@@ -166,6 +170,7 @@ public class CustomWebApplicationFactory : WebApplicationFactory<Program>
         {
             Id = "000000000000000000000005",
             AuthorId = u2.Id,
+            AuthorName = u2.Username,
             Text = "Simon's second tweet",
             PubDate = DateTime.Parse("01/01/2023 12:00:03").ToUniversalTime(),
             Flagged = false
@@ -175,6 +180,7 @@ public class CustomWebApplicationFactory : WebApplicationFactory<Program>
         {
             Id = "000000000000000000000006",
             AuthorId = u2.Id,
+            AuthorName = u2.Username,
             Text = "Simon's third tweet",
             PubDate = DateTime.Parse("01/01/2023 12:00:04").ToUniversalTime(),
             Flagged = false
@@ -184,6 +190,7 @@ public class CustomWebApplicationFactory : WebApplicationFactory<Program>
         {
             Id = "000000000000000000000007",
             AuthorId = u3.Id,
+            AuthorName = u3.Username,
             Text = "Nikolaj1",
             PubDate = DateTime.Parse("01/01/2023 12:00:05").ToUniversalTime(),
             Flagged = false
@@ -193,6 +200,7 @@ public class CustomWebApplicationFactory : WebApplicationFactory<Program>
         {
             Id = "000000000000000000000008",
             AuthorId = u3.Id,
+            AuthorName = u3.Username,
             Text = "Nikolaj2",
             PubDate = DateTime.Parse("01/01/2023 12:00:06").ToUniversalTime(),
             Flagged = false
@@ -202,6 +210,7 @@ public class CustomWebApplicationFactory : WebApplicationFactory<Program>
         {
             Id = "000000000000000000000009",
             AuthorId = u4.Id,
+            AuthorName = u4.Username,
             Text = "Victor1",
             PubDate = DateTime.Parse("01/01/2023 12:00:01").ToUniversalTime(),
             Flagged = false
@@ -211,6 +220,7 @@ public class CustomWebApplicationFactory : WebApplicationFactory<Program>
         {
             Id = "000000000000000000000010",
             AuthorId = u4.Id,
+            AuthorName = u4.Username,
             Text = "Victor2",
             PubDate = DateTime.Parse("01/01/2023 12:00:02").ToUniversalTime(),
             Flagged = false

@@ -34,16 +34,16 @@ public class DataInitializer
          _context.Users.InsertMany(new[] { gustav, simon, nikolaj, victor });
 
         // Messages
-        var m1 = TweetCreator.Create(gustav.Id!, "Gustav's first tweet!", DateTime.UtcNow.AddDays(-1));
-        var m2 = TweetCreator.Create(gustav.Id!, "Gustav's second tweet!", DateTime.UtcNow.AddDays(-0.5));
-        var m3 = TweetCreator.Create(gustav.Id!, "Gustav's Flagged", DateTime.UtcNow, true);
-        var m4 = TweetCreator.Create(simon.Id!, "Simon's first tweet");
-        var m5 = TweetCreator.Create(simon.Id!, "Simon's second tweet");
-        var m6 = TweetCreator.Create(simon.Id!, "Simon's third tweet");
-        var m7 = TweetCreator.Create(nikolaj.Id!, "Nikolaj1");
-        var m8 = TweetCreator.Create(nikolaj.Id!, "Nikolaj2");
-        var m9 = TweetCreator.Create(victor.Id!, "Victor1");
-        var m10 =TweetCreator.Create(victor.Id!, "Victor2");
+        var m1 = TweetCreator.Create(gustav.Id!, gustav.Username, "Gustav's first tweet!", DateTime.UtcNow.AddDays(-1));
+        var m2 = TweetCreator.Create(gustav.Id!, gustav.Username, "Gustav's second tweet!", DateTime.UtcNow.AddDays(-0.5));
+        var m3 = TweetCreator.Create(gustav.Id!, gustav.Username, "Gustav's Flagged", DateTime.UtcNow, true);
+        var m4 = TweetCreator.Create(simon.Id!, simon.Username, "Simon's first tweet");
+        var m5 = TweetCreator.Create(simon.Id!, simon.Username, "Simon's second tweet");
+        var m6 = TweetCreator.Create(simon.Id!, simon.Username, "Simon's third tweet");
+        var m7 = TweetCreator.Create(nikolaj.Id!, nikolaj.Username, "Nikolaj1");
+        var m8 = TweetCreator.Create(nikolaj.Id!, nikolaj.Username, "Nikolaj2");
+        var m9 = TweetCreator.Create(victor.Id!, victor.Username, "Victor1");
+        var m10 =TweetCreator.Create(victor.Id!, victor.Username, "Victor2");
 
         _context.Tweets.InsertMany(new[] { m1, m2, m3, m4, m5, m6, m7, m8, m9, m10 });
 

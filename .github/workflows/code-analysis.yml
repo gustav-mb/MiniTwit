@@ -14,18 +14,42 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
-        uses: actions/Checkout@v3
+        uses: actions/checkout@v3
 
       - name: Initialize CodeQL
         uses: github/codeql-action/init@v2
         with:
-            languages: csharp
+            languages: csharp, javascript
 
       - name: Autobuild
         uses: github/codeql-action/autobuild@v2
 
       - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@v2
+
+  ESLint:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: MiniTwit.Web
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Install ESLint
+        run: |
+          npm install eslint@8.10.0
+          npm install @microsoft/eslint-formatter-sarif@2.1.7
+
+      - name: Run ESLint
+        run: npx eslint . --ext .js,.jsx,.ts,.tsx --format @microsoft/eslint-formatter-sarif --output-file eslint-results.sarif
+        continue-on-error: true
+
+      - name: Upload result to GitHub Code Scanning
+        uses: github/codeql-action/upload-sarif@v2
+        with:
+          sarif_file: MiniTwit.Web/eslint-results.sarif
+          wait-for-processing: true
 
   Snyk:
     runs-on: ubuntu-latest
@@ -43,6 +67,13 @@ jobs:
         with:
           dotnet-version: 7.0.x
 
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18.16.x
+          cache: 'npm'
+          cache-dependency-path: MiniTwit.Web/package-lock.json
+
       - name: Restore Backend dependencies
         run: dotnet restore
 
@@ -58,14 +89,14 @@ jobs:
       - name: Build MiniTwit Backend Docker image
         run: docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/minitwit-backend:latest -f MiniTwit.Server/Dockerfile .
 
-      # - name: Build MiniTwit Frontend Docker image
-      #   run: docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/minitwit-frontend:latest -f MiniTwit.Web/Dockerfile .
+      - name: Build MiniTwit Frontend Docker image
+        run: docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/minitwit-frontend:latest -f MiniTwit.Web/Dockerfile .
       
       - name: Run Snyk Container Monitor on MiniTwit Backend
         run: snyk container monitor --org=${{ secrets.SNYK_ORG_ID }} ${{ secrets.DOCKERHUB_USERNAME }}/minitwit-backend:latest --file=MiniTwit.Server/Dockerfile
 
-      # - name: Run Snyk Container Monitor on MiniTwit Frontend
-      #   run: snyk container monitor --org=${{ secrets.SNYK_ORG_ID }} ${{ secrets.DOCKERHUB_USERNAME }}/minitwit-frontend:latest --file=MiniTwit.Web/Dockerfile
+      - name: Run Snyk Container Monitor on MiniTwit Frontend
+        run: snyk container monitor --org=${{ secrets.SNYK_ORG_ID }} ${{ secrets.DOCKERHUB_USERNAME }}/minitwit-frontend:latest --file=MiniTwit.Web/Dockerfile
 
       - name: Upload result to GitHub Code Scanning
         uses: github/codeql-action/upload-sarif@v2

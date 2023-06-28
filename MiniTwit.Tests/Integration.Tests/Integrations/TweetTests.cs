@@ -48,11 +48,11 @@ public class TweetTests : IClassFixture<CustomWebApplicationFactory>
         // Assert
         Assert.Equal(HttpStatusCode.OK, actual.StatusCode);
         Assert.Collection(content!,
-            tweet => tweet.Should().BeEquivalentTo(new TweetDTO { AuthorId = "000000000000000000000002", Text = "Simon's third tweet", PubDate = DateTime.Parse("01/01/2023 12:00:04").ToUniversalTime() }),
-            tweet => tweet.Should().BeEquivalentTo(new TweetDTO { AuthorId = "000000000000000000000002", Text = "Simon's second tweet", PubDate = DateTime.Parse("01/01/2023 12:00:03").ToUniversalTime() }),
-            tweet => tweet.Should().BeEquivalentTo(new TweetDTO { AuthorId = "000000000000000000000002", Text = "Simon's first tweet", PubDate = DateTime.Parse("01/01/2023 12:00:02").ToUniversalTime() }),
-            tweet => tweet.Should().BeEquivalentTo(new TweetDTO { AuthorId = "000000000000000000000001", Text = "Gustav's first tweet!", PubDate = DateTime.Parse("01/01/2023 12:00:00").ToUniversalTime() }),
-            tweet => tweet.Should().BeEquivalentTo(new TweetDTO { AuthorId = "000000000000000000000001", Text = "Gustav's second tweet!", PubDate = DateTime.Parse("01/01/2023 12:00:00").ToUniversalTime() })
+            tweet => tweet.Should().BeEquivalentTo(new TweetDTO { Id = "000000000000000000000006", AuthorId = "000000000000000000000002", AuthorName = "Simon", Text = "Simon's third tweet", PubDate = DateTime.Parse("01/01/2023 12:00:04").ToUniversalTime() }),
+            tweet => tweet.Should().BeEquivalentTo(new TweetDTO { Id = "000000000000000000000005", AuthorId = "000000000000000000000002", AuthorName = "Simon", Text = "Simon's second tweet", PubDate = DateTime.Parse("01/01/2023 12:00:03").ToUniversalTime() }),
+            tweet => tweet.Should().BeEquivalentTo(new TweetDTO { Id = "000000000000000000000004", AuthorId = "000000000000000000000002", AuthorName = "Simon", Text = "Simon's first tweet", PubDate = DateTime.Parse("01/01/2023 12:00:02").ToUniversalTime() }),
+            tweet => tweet.Should().BeEquivalentTo(new TweetDTO { Id = "000000000000000000000001", AuthorId = "000000000000000000000001", AuthorName = "Gustav", Text = "Gustav's first tweet!", PubDate = DateTime.Parse("01/01/2023 12:00:00").ToUniversalTime() }),
+            tweet => tweet.Should().BeEquivalentTo(new TweetDTO { Id = "000000000000000000000002", AuthorId = "000000000000000000000001", AuthorName = "Gustav", Text = "Gustav's second tweet!", PubDate = DateTime.Parse("01/01/2023 12:00:00").ToUniversalTime() })
         );
     }
 
@@ -89,15 +89,15 @@ public class TweetTests : IClassFixture<CustomWebApplicationFactory>
         // Assert
         Assert.Equal(HttpStatusCode.OK, actual.StatusCode);
         Assert.Collection(content!,
-            tweet => tweet.Should().BeEquivalentTo(new TweetDTO { AuthorId = "000000000000000000000003", Text = "Nikolaj2", PubDate = DateTime.Parse("01/01/2023 12:00:06").ToUniversalTime() }),
-            tweet => tweet.Should().BeEquivalentTo(new TweetDTO { AuthorId = "000000000000000000000003", Text = "Nikolaj1", PubDate = DateTime.Parse("01/01/2023 12:00:05").ToUniversalTime() }),
-            tweet => tweet.Should().BeEquivalentTo(new TweetDTO { AuthorId = "000000000000000000000002", Text = "Simon's third tweet", PubDate = DateTime.Parse("01/01/2023 12:00:04").ToUniversalTime() }),
-            tweet => tweet.Should().BeEquivalentTo(new TweetDTO { AuthorId = "000000000000000000000002", Text = "Simon's second tweet", PubDate = DateTime.Parse("01/01/2023 12:00:03").ToUniversalTime() }),
-            tweet => tweet.Should().BeEquivalentTo(new TweetDTO { AuthorId = "000000000000000000000002", Text = "Simon's first tweet", PubDate = DateTime.Parse("01/01/2023 12:00:02").ToUniversalTime() }),
-            tweet => tweet.Should().BeEquivalentTo(new TweetDTO { AuthorId = "000000000000000000000004", Text = "Victor2", PubDate = DateTime.Parse("01/01/2023 12:00:02").ToUniversalTime() }),
-            tweet => tweet.Should().BeEquivalentTo(new TweetDTO { AuthorId = "000000000000000000000004", Text = "Victor1", PubDate = DateTime.Parse("01/01/2023 12:00:01").ToUniversalTime() }),
-            tweet => tweet.Should().BeEquivalentTo(new TweetDTO { AuthorId = "000000000000000000000001", Text = "Gustav's first tweet!", PubDate = DateTime.Parse("01/01/2023 12:00:00").ToUniversalTime() }),
-            tweet => tweet.Should().BeEquivalentTo(new TweetDTO { AuthorId = "000000000000000000000001", Text = "Gustav's second tweet!", PubDate = DateTime.Parse("01/01/2023 12:00:00").ToUniversalTime() })
+            tweet => tweet.Should().BeEquivalentTo(new TweetDTO { Id = "000000000000000000000008", AuthorId = "000000000000000000000003", AuthorName = "Nikolaj", Text = "Nikolaj2", PubDate = DateTime.Parse("01/01/2023 12:00:06").ToUniversalTime() }),
+            tweet => tweet.Should().BeEquivalentTo(new TweetDTO { Id = "000000000000000000000007", AuthorId = "000000000000000000000003", AuthorName = "Nikolaj", Text = "Nikolaj1", PubDate = DateTime.Parse("01/01/2023 12:00:05").ToUniversalTime() }),
+            tweet => tweet.Should().BeEquivalentTo(new TweetDTO { Id = "000000000000000000000006", AuthorId = "000000000000000000000002", AuthorName = "Simon", Text = "Simon's third tweet", PubDate = DateTime.Parse("01/01/2023 12:00:04").ToUniversalTime() }),
+            tweet => tweet.Should().BeEquivalentTo(new TweetDTO { Id = "000000000000000000000005", AuthorId = "000000000000000000000002", AuthorName = "Simon", Text = "Simon's second tweet", PubDate = DateTime.Parse("01/01/2023 12:00:03").ToUniversalTime() }),
+            tweet => tweet.Should().BeEquivalentTo(new TweetDTO { Id = "000000000000000000000004", AuthorId = "000000000000000000000002", AuthorName = "Simon", Text = "Simon's first tweet", PubDate = DateTime.Parse("01/01/2023 12:00:02").ToUniversalTime() }),
+            tweet => tweet.Should().BeEquivalentTo(new TweetDTO { Id = "000000000000000000000010", AuthorId = "000000000000000000000004", AuthorName = "Victor", Text = "Victor2", PubDate = DateTime.Parse("01/01/2023 12:00:02").ToUniversalTime() }),
+            tweet => tweet.Should().BeEquivalentTo(new TweetDTO { Id = "000000000000000000000009", AuthorId = "000000000000000000000004", AuthorName = "Victor", Text = "Victor1", PubDate = DateTime.Parse("01/01/2023 12:00:01").ToUniversalTime() }),
+            tweet => tweet.Should().BeEquivalentTo(new TweetDTO { Id = "000000000000000000000001", AuthorId = "000000000000000000000001", AuthorName = "Gustav", Text = "Gustav's first tweet!", PubDate = DateTime.Parse("01/01/2023 12:00:00").ToUniversalTime() }),
+            tweet => tweet.Should().BeEquivalentTo(new TweetDTO { Id = "000000000000000000000002", AuthorId = "000000000000000000000001", AuthorName = "Gustav", Text = "Gustav's second tweet!", PubDate = DateTime.Parse("01/01/2023 12:00:00").ToUniversalTime() })
         );
     }
 
@@ -131,9 +131,9 @@ public class TweetTests : IClassFixture<CustomWebApplicationFactory>
         // Assert
         Assert.Equal(HttpStatusCode.OK, actual.StatusCode);
         Assert.Collection(content!,
-            tweet => tweet.Should().BeEquivalentTo(new TweetDTO { AuthorId = "000000000000000000000001", Text = "Gustav's Flagged", PubDate = DateTime.Parse("01/01/2023 12:00:01").ToUniversalTime() }),
-            tweet => tweet.Should().BeEquivalentTo(new TweetDTO { AuthorId = "000000000000000000000001", Text = "Gustav's first tweet!", PubDate = DateTime.Parse("01/01/2023 12:00:00").ToUniversalTime() }),
-            tweet => tweet.Should().BeEquivalentTo(new TweetDTO { AuthorId = "000000000000000000000001", Text = "Gustav's second tweet!", PubDate = DateTime.Parse("01/01/2023 12:00:00").ToUniversalTime() })
+            tweet => tweet.Should().BeEquivalentTo(new TweetDTO { Id = "000000000000000000000003", AuthorId = "000000000000000000000001", AuthorName = "Gustav", Text = "Gustav's Flagged", PubDate = DateTime.Parse("01/01/2023 12:00:01").ToUniversalTime() }),
+            tweet => tweet.Should().BeEquivalentTo(new TweetDTO { Id = "000000000000000000000001", AuthorId = "000000000000000000000001", AuthorName = "Gustav", Text = "Gustav's first tweet!", PubDate = DateTime.Parse("01/01/2023 12:00:00").ToUniversalTime() }),
+            tweet => tweet.Should().BeEquivalentTo(new TweetDTO { Id = "000000000000000000000002", AuthorId = "000000000000000000000001", AuthorName = "Gustav", Text = "Gustav's second tweet!", PubDate = DateTime.Parse("01/01/2023 12:00:00").ToUniversalTime() })
         );
     }
 
