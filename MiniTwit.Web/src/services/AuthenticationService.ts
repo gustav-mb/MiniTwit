@@ -10,15 +10,14 @@ class AuthenticationService {
             username: username,
             password: password
         }
-        
+
         return await axiosClient.post(`${ROUTE}/login`, loginDTO)
     }
 
-    // TODO
-    public async refreshToken(): Promise<TokenDTO> {
+    public async refreshToken(accessToken: string, refreshToken: string): Promise<TokenDTO> {
         const tokenDTO: TokenDTO = {
-            accessToken: "",
-            refreshToken: ""
+            accessToken: accessToken,
+            refreshToken: refreshToken
         }
 
         return await axiosClient.post(`${ROUTE}/refresh-token`, tokenDTO)
