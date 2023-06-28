@@ -32,6 +32,7 @@ public class TweetRepository : ITweetRepository
         var tweet = new Tweet
         {
             AuthorId = user.Id,
+            AuthorName = user.Username,
             Text = text,
             PubDate = DateTime.UtcNow,
             Flagged = false
