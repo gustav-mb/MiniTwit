@@ -1,13 +1,45 @@
 import { useParams } from "react-router-dom";
-import { getUsername } from "../../authentication/JwtToken";
+import { getUserId, getUsername } from "../../authentication/JwtToken";
 import { useDocumentTitle } from "../../utilities/Utilities";
+import FollowerService from "../../services/FollowerService";
+import TweetService from "../../services/TweetService";
+import { useEffect, useState } from "react";
+import { TweetDTO } from "../../models/TweetDTO";
+import TweetCollection from "../tweet/TweetCollection";
 
 // TODO Implement follow logic
+const followerService = new FollowerService()
+const tweetService = new TweetService()
+
 const followed = false
 
-function UserTimeline() {
+function UserTimeline({ setFlash }: { setFlash: (message: string) => void }) {
     const { username } = useParams()
     useDocumentTitle(`${username}'s Timeline`)
+
+    const [tweets, setTweets] = useState<TweetDTO[]>([])
+
+    useEffect(() => {
+        const fetchTweets = async () => {
+            await tweetService.getUserTimeline(username)
+                .then(tweets => setTweets(tweets))
+                .catch(_ => true)
+        }
+        
+        fetchTweets()
+    }, [username])
+
+    async function followUser() {
+        await followerService.followUser(username, getUserId())
+            .then(() => setFlash(`You are now following "${username}"`))
+            .catch(() => true)
+    }
+
+    async function unfollowUser() {
+        await followerService.unfollowUser(username, getUserId())
+            .then(() => setFlash(`You are no longer following "${username}"`))
+            .catch(() => true)
+    }
     
     return (
         <>
@@ -29,16 +61,9 @@ function UserTimeline() {
                         </>
                 }
             </div>
+            <TweetCollection tweets={tweets}></TweetCollection>
         </>
     );
-}
-
-function unfollowUser() {
-    
-}
-
-function followUser() {
-
 }
 
 export default UserTimeline
