@@ -24,7 +24,7 @@ jobs:
       run: dotnet test --no-build --verbosity normal
 
   Frontend:
-    runs-on: unbuntu-latest
+    runs-on: ubuntu-latest
     defaults:
       run:
         working-directory: MiniTwit.Web
