@@ -1,15 +1,12 @@
-import { useEffect, useRef } from "react";
+import { useEffect } from "react";
 
-export function useDocumentTitle(title: string, prevailOnUnmount = false) {
-    const defaultTitle = useRef(document.title)
-
+export function useDocumentTitle(title: string) {
     useEffect(() => {
-        document.title = title
-    }, [title])
+        const previousTitle = document.title
+        document.title = `${title} | MiniTwit`
 
-    useEffect(() => () => {
-        if (!prevailOnUnmount) {
-            document.title = defaultTitle.current
+        return () => {
+            document.title = previousTitle
         }
-    }, [prevailOnUnmount])
+    }, [title])
 }
