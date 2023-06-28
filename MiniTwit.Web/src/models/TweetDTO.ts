@@ -1,7 +1,8 @@
 export interface TweetDTO
 {
+    id: string
     authorId: string
-    username: string
+    authorName: string
     email: string
     text: string
     pubDate: string
