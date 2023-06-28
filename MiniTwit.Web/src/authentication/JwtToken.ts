@@ -1,5 +1,9 @@
 import jwtDecode from "jwt-decode"
 
+export function getUserId(): string {
+    return ""
+}
+
 export function getUsername(): string {
     return ""
 }
