@@ -9,7 +9,7 @@ function TweetCollection({tweets}: {tweets: TweetDTO[]}) {
                     ?
                     <>
                         {tweets.map(tweet => (
-                            <Tweet authorId={tweet.authorId} username={tweet.username} email={tweet.email} text={tweet.text} pubDate={tweet.pubDate}></Tweet>
+                            <Tweet key={tweet.id} tweet={tweet}></Tweet>
                         ))
                         }
                     </>
